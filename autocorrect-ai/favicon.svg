@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="green-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4ADE80" />
+      <stop offset="50%" stop-color="#16A34A" />
+      <stop offset="100%" stop-color="#15803D" />
+    </linearGradient>
+  </defs>
+  <!-- Background Circle or Rounded Square -->
+  <rect width="512" height="512" rx="128" fill="url(#green-gradient)" />
+  
+  <!-- Stylized Writing Pen and Sparkle -->
+  <g transform="translate(96, 96)" fill="#FFFFFF">
+    <!-- Clean modern pen/nib pointing down-left -->
+    <path d="M265.4 32.2c-15.6-15.6-40.9-15.6-56.6 0L42.2 198.8c-3.1 3.1-5.3 7.1-6.3 11.4l-15.6 69.4c-2.3 10.1 6.6 19.1 16.7 16.7l69.4-15.6c4.3-1 8.3-3.2 11.4-6.3L265.4 88.8c15.6-15.6 15.6-40.9 0-56.6zM78.6 226.7l-26.9-26.9 123-123 26.9 26.9-123 123z" />
+    <!-- AI sparkles / edits -->
+    <path d="M250 180l6 18 18 6-18 6-6 18-6-18-18-6 18-6z" opacity="0.9" />
+    <path d="M120 40l4 12 12 4-12 4-4 12-4-12-12-4 12-4z" opacity="0.8" />
+  </g>
+</svg>
