@@ -484,63 +484,6 @@
   color: var(--primary);
 }
 
-/* ============================================
-   Trusted By
-   ============================================ */
-
-.trusted {
-  padding: var(--space-16) 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  overflow: hidden;
-}
-
-.trusted-label {
-  text-align: center;
-  font-size: var(--text-sm);
-  font-weight: var(--font-semibold);
-  color: var(--text-muted);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: var(--space-8);
-}
-
-.trusted-marquee-wrapper {
-  overflow: hidden;
-  width: 100%;
-}
-
-.trusted-marquee {
-  display: flex;
-  gap: var(--space-16);
-  width: max-content;
-  animation: marquee 25s linear infinite;
-}
-
-.trusted-marquee:hover { animation-play-state: paused; }
-
-.trusted-logo {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  font-size: var(--text-lg);
-  font-weight: var(--font-bold);
-  color: var(--text-muted);
-  opacity: 0.5;
-  transition: opacity 0.3s ease;
-  white-space: nowrap;
-}
-
-.trusted-logo:hover { opacity: 1; }
-
-.trusted-logo-icon {
-  width: 32px; height: 32px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
 
 /* ============================================
    Features Section
