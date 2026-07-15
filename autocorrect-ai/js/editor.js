@@ -927,11 +927,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const editor = getEditor();
       const content = editor.innerHTML;
-      // Simple text replacement
-      editor.innerHTML = content.replace(
-        new RegExp(err.original || err.word, 'i'),
-        err.fix
-      );
+      const escaped = (err.original || err.word).replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const startBoundary = /^\w/.test(err.original || err.word) ? '\\b' : '';
+      const endBoundary = /\w$/.test(err.original || err.word) ? '\\b' : '';
+      const regex = new RegExp(startBoundary + escaped + endBoundary + '(?=[^<>]*([<]|$))', 'i');
+
+      editor.innerHTML = content.replace(regex, err.fix);
 
       Storage.addToHistory({ action: `Fixed: "${err.word}" → "${err.fix}"` });
       Storage.updateStats({ mistakesFixed: 1 });
@@ -995,10 +996,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     replaceWord(original, replacement) {
       const editor = getEditor();
-      editor.innerHTML = editor.innerHTML.replace(
-        new RegExp(`\\b${original}\\b`, 'gi'),
-        replacement
-      );
+      const escaped = original.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const startBoundary = /^\w/.test(original) ? '\\b' : '';
+      const endBoundary = /\w$/.test(original) ? '\\b' : '';
+      const regex = new RegExp(startBoundary + escaped + endBoundary + '(?=[^<>]*([<]|$))', 'gi');
+
+      editor.innerHTML = editor.innerHTML.replace(regex, replacement);
       showToast(`Replaced "${original}" → "${replacement}"`, 'success');
       scheduleAnalysis(300);
     },

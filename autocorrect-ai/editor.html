@@ -297,12 +297,12 @@
               <div class="ai-tool-section">
                 <div class="ai-tool-title">⚡ Tone Adjuster</div>
                 <div class="tone-chips" style="margin-bottom:12px">
-                  <span class="chip active" data-tone="professional">Professional</span>
-                  <span class="chip" data-tone="academic">Academic</span>
-                  <span class="chip" data-tone="friendly">Friendly</span>
-                  <span class="chip" data-tone="formal">Formal</span>
-                  <span class="chip" data-tone="confident">Confident</span>
-                  <span class="chip" data-tone="simple">Simple</span>
+                  <span class="chip tone-chip active" data-tone="professional">Professional</span>
+                  <span class="chip tone-chip" data-tone="academic">Academic</span>
+                  <span class="chip tone-chip" data-tone="friendly">Friendly</span>
+                  <span class="chip tone-chip" data-tone="formal">Formal</span>
+                  <span class="chip tone-chip" data-tone="confident">Confident</span>
+                  <span class="chip tone-chip" data-tone="simple">Simple</span>
                 </div>
                 <button class="btn btn-primary btn-block btn-sm" id="ai-rewrite-btn">Apply Tone Change</button>
               </div>
@@ -335,6 +335,21 @@
                 <div class="ai-tool-title">🤖 AI Content Check</div>
                 <button class="btn btn-secondary btn-block btn-sm" id="detect-ai-btn">Analyze AI Probability</button>
                 <div id="ai-detect-output" style="margin-top:8px"></div>
+              </div>
+
+              <!-- AI Content Generator Card -->
+              <div class="ai-tool-section">
+                <div class="ai-tool-title">✍️ AI Content Generator</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <select class="form-select" id="generate-type" style="width:100%">
+                    <option value="blog">Blog Post</option>
+                    <option value="linkedin">LinkedIn Post</option>
+                    <option value="email">Professional Email</option>
+                    <option value="essay">Academic Essay</option>
+                  </select>
+                  <input type="text" class="form-input" id="generate-topic" placeholder="Enter topic or prompt..." style="width:100%">
+                  <button class="btn btn-primary btn-block btn-sm" id="generate-btn">Generate Content</button>
+                </div>
               </div>
             </div>
 
