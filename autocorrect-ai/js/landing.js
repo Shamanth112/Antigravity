@@ -186,24 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================================
-  // Pricing Toggle (Monthly / Yearly)
-  // ============================================================
-  const pricingToggle = document.getElementById('pricing-toggle');
-  const prices = {
-    monthly: { free: '0', pro: '19', team: '49' },
-    yearly:  { free: '0', pro: '15', team: '39' },
-  };
-
-  pricingToggle?.addEventListener('change', () => {
-    const mode = pricingToggle.checked ? 'yearly' : 'monthly';
-    document.getElementById('price-free').textContent = prices[mode].free;
-    document.getElementById('price-pro').textContent = prices[mode].pro;
-    document.getElementById('price-team').textContent = prices[mode].team;
-    document.querySelector('.pricing-toggle-label.monthly')?.classList.toggle('active', !pricingToggle.checked);
-    document.querySelector('.pricing-toggle-label.yearly')?.classList.toggle('active', pricingToggle.checked);
-  });
-
-  // ============================================================
   // Demo tool buttons
   // ============================================================
   document.querySelectorAll('.demo-tool-btn').forEach(btn => {
