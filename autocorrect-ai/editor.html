@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AutoCorrect AI Editor Dashboard — Professional writing assistant with real-time grammar checks, style improvements, and tone adjustments.">
+  <title>Editor Dashboard — AutoCorrect AI</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <div class="app-shell">
+    <!-- ==========================================
+         Sidebar Navigation
+         ========================================== -->
+    <aside class="sidebar" id="main-sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">✍</div>
+          <span class="sidebar-logo-text">AutoCorrect<span style="color:var(--primary)">AI</span></span>
+        </a>
+        <button class="sidebar-toggle" id="sidebar-toggle-btn" title="Toggle Sidebar">←</button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Main</div>
+        
+        <a href="#" class="sidebar-nav-item active" data-view="editor">
+          <span class="nav-item-icon">📝</span>
+          <span class="nav-item-text">Editor</span>
+        </a>
+        
+        <a href="#" class="sidebar-nav-item" data-view="documents">
+          <span class="nav-item-icon">📂</span>
+          <span class="nav-item-text">Documents</span>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="templates">
+          <span class="nav-item-icon">📋</span>
+          <span class="nav-item-text">Templates</span>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="history">
+          <span class="nav-item-icon">⏱</span>
+          <span class="nav-item-text">History</span>
+        </a>
+
+        <div class="sidebar-section-label">AI Writing Tools</div>
+
+        <a href="#" class="sidebar-nav-item" data-view="translator">
+          <span class="nav-item-icon">🌐</span>
+          <span class="nav-item-text">Translator</span>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="vocabulary">
+          <span class="nav-item-icon">📚</span>
+          <span class="nav-item-text">Vocabulary</span>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="analytics">
+          <span class="nav-item-icon">📊</span>
+          <span class="nav-item-text">Analytics</span>
+        </a>
+
+        <div class="sidebar-section-label">Preferences</div>
+
+        <a href="#" class="sidebar-nav-item" data-view="settings">
+          <span class="nav-item-icon">⚙️</span>
+          <span class="nav-item-text">Settings</span>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="help">
+          <span class="nav-item-icon">❓</span>
+          <span class="nav-item-text">Help & Guides</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar">AD</div>
+          <div class="user-info">
+            <div class="user-name">Alex Dev</div>
+            <div class="user-plan">Pro Member</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ==========================================
+         Main Content Area
+         ========================================== -->
+    <main class="main-content">
+      
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="btn btn-secondary btn-icon-sm hide-desktop" id="mobile-menu-btn" title="Open Menu">☰</button>
+          
+          <div class="doc-breadcrumb">
+            <span>Documents</span>
+            <span>/</span>
+            <span class="doc-name" id="doc-name" title="Click to rename">My First Document</span>
+            <button class="btn btn-ghost btn-icon-sm" id="rename-doc-btn" title="Rename Document">✏️</button>
+          </div>
+
+          <div class="autosave-indicator" id="autosave-indicator">
+            <span class="autosave-dot"></span>
+            Auto-saving...
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="theme-toggle" title="Toggle Theme">🌙</button>
+          
+          <!-- Voice Typing Trigger -->
+          <button class="btn btn-outline btn-sm" id="voice-btn" title="Start voice dictation">
+            🎤 Voice Type
+          </button>
+
+          <!-- Export Dropdown -->
+          <div class="dropdown">
+            <button class="btn btn-primary btn-sm" id="new-doc-btn">➕ New Doc</button>
+          </div>
+
+          <button class="btn btn-secondary btn-sm" onclick="document.getElementById('import-file').click()">
+            📥 Import
+          </button>
+          <input type="file" id="import-file" style="display: none;" accept=".txt,.html,.md">
+        </div>
+      </header>
+
+      <!-- VIEW: Editor Panel -->
+      <div id="view-editor" class="view-panel editor-workspace">
+        <div class="editor-main">
+          
+          <!-- Editing Toolbar -->
+          <div class="editor-toolbar">
+            <div class="toolbar-group">
+              <button class="toolbar-btn" id="tb-undo" title="Undo (Ctrl+Z)">⟲</button>
+              <button class="toolbar-btn" id="tb-redo" title="Redo (Ctrl+Y)">⟳</button>
+            </div>
+
+            <div class="toolbar-group">
+              <select class="toolbar-select" id="tb-font-family" title="Font Family">
+                <option value="var(--font-sans)">Jakarta Sans</option>
+                <option value="Inter">Inter</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Courier New">Monospace</option>
+              </select>
+
+              <select class="toolbar-select" id="tb-font-size" title="Font Size">
+                <option value="3">Small</option>
+                <option value="4" selected>Normal</option>
+                <option value="5">Large</option>
+                <option value="6">Extra Large</option>
+              </select>
+            </div>
+
+            <div class="toolbar-group">
+              <button class="toolbar-btn" id="tb-bold" title="Bold (Ctrl+B)"><b>B</b></button>
+              <button class="toolbar-btn" id="tb-italic" title="Italic (Ctrl+I)"><i>I</i></button>
+              <button class="toolbar-btn" id="tb-underline" title="Underline (Ctrl+U)"><u>U</u></button>
+              <button class="toolbar-btn" id="tb-strike" title="Strikethrough"><s>S</s></button>
+            </div>
+
+            <div class="toolbar-group">
+              <button class="toolbar-btn" id="tb-h1" title="Heading 1">H1</button>
+              <button class="toolbar-btn" id="tb-h2" title="Heading 2">H2</button>
+              <button class="toolbar-btn" id="tb-h3" title="Heading 3">H3</button>
+              <button class="toolbar-btn" id="tb-p" title="Paragraph">P</button>
+            </div>
+
+            <div class="toolbar-group">
+              <button class="toolbar-btn" id="tb-ul" title="Bullet List">• List</button>
+              <button class="toolbar-btn" id="tb-ol" title="Numbered List">1. List</button>
+              <button class="toolbar-btn" id="tb-quote" title="Blockquote">“</button>
+            </div>
+
+            <div class="toolbar-group">
+              <button class="toolbar-btn" id="tb-left" title="Align Left">Align L</button>
+              <button class="toolbar-btn" id="tb-center" title="Align Center">Align C</button>
+              <button class="toolbar-btn" id="tb-right" title="Align Right">Align R</button>
+            </div>
+
+            <div class="toolbar-group">
+              <button class="toolbar-btn" id="tb-link" title="Insert Link">🔗</button>
+              <input type="color" id="tb-color" class="toolbar-btn" title="Text Color" style="padding:0;width:30px;height:30px;border:none;background:none;cursor:pointer">
+              <button class="toolbar-btn" id="tb-clear" title="Clear Formatting">🧹</button>
+            </div>
+          </div>
+
+          <!-- Paper Canvas -->
+          <div class="editor-area">
+            <div class="editor-paper">
+              <div 
+                class="editor-content" 
+                id="editor-content" 
+                contenteditable="true" 
+                spellcheck="false"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Word counts & stats -->
+          <div class="editor-stats-bar">
+            <div class="stat-item">Words: <span class="stat-value" id="stat-words">0</span></div>
+            <div class="stat-item">Characters: <span class="stat-value" id="stat-chars">0</span></div>
+            <div class="stat-item">Paragraphs: <span class="stat-value" id="stat-paragraphs">0</span></div>
+            <div class="stat-item">Sentences: <span class="stat-value" id="stat-sentences">0</span></div>
+            <div class="stat-item">Reading Time: <span class="stat-value" id="stat-reading">1 min</span></div>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             Right Side Panel (AI Assistance)
+             ========================================== -->
+        <aside class="ai-panel" id="ai-panel">
+          <div class="ai-panel-header">
+            <span class="ai-panel-title">🪄 AI Assistant</span>
+          </div>
+
+          <!-- Tabs -->
+          <div class="panel-tabs">
+            <div class="panel-tab active" data-panel="suggestions">Suggestions (<span id="error-count">0</span>)</div>
+            <div class="panel-tab" data-panel="rewrite">AI Tools</div>
+            <div class="panel-tab" data-panel="chat">AI Chat</div>
+          </div>
+
+          <div class="panel-content">
+            
+            <!-- SECTION: Suggestions -->
+            <div class="panel-section active" id="panel-suggestions">
+              <!-- Score circular ring -->
+              <div class="writing-score-card">
+                <div class="score-ring">
+                  <svg width="120" height="120">
+                    <circle class="score-ring-track" cx="60" cy="60" r="54"></circle>
+                    <circle class="score-ring-fill" id="score-ring-fill" cx="60" cy="60" r="54" style="stroke-dasharray: 339.292; stroke-dashoffset: 339.292;"></circle>
+                  </svg>
+                  <div class="score-ring-value">
+                    <span class="score-ring-number" id="score-number">0</span>
+                    <span class="score-ring-label">Score</span>
+                  </div>
+                </div>
+
+                <div class="score-breakdown">
+                  <div class="score-row">
+                    <span class="score-row-label">Grammar</span>
+                    <div class="progress-bar score-row-bar"><div class="progress-fill" id="score-grammar-bar" style="width:0%"></div></div>
+                    <span class="score-row-value" id="score-grammar-num">0</span>
+                  </div>
+                  <div class="score-row">
+                    <span class="score-row-label">Vocabulary</span>
+                    <div class="progress-bar score-row-bar"><div class="progress-fill" id="score-vocabulary-bar" style="width:0%"></div></div>
+                    <span class="score-row-value" id="score-vocabulary-num">0</span>
+                  </div>
+                  <div class="score-row">
+                    <span class="score-row-label">Clarity</span>
+                    <div class="progress-bar score-row-bar"><div class="progress-fill" id="score-clarity-bar" style="width:0%"></div></div>
+                    <span class="score-row-value" id="score-clarity-num">0</span>
+                  </div>
+                  <div class="score-row">
+                    <span class="score-row-label">Readability</span>
+                    <div class="progress-bar score-row-bar"><div class="progress-fill" id="score-readability-bar" style="width:0%"></div></div>
+                    <span class="score-row-value" id="score-readability-num">0</span>
+                  </div>
+                  <div class="score-row">
+                    <span class="score-row-label">Engagement</span>
+                    <div class="progress-bar score-row-bar"><div class="progress-fill" id="score-engagement-bar" style="width:0%"></div></div>
+                    <span class="score-row-value" id="score-engagement-num">0</span>
+                  </div>
+                  <div class="score-row">
+                    <span class="score-row-label">Conciseness</span>
+                    <div class="progress-bar score-row-bar"><div class="progress-fill" id="score-conciseness-bar" style="width:0%"></div></div>
+                    <span class="score-row-value" id="score-conciseness-num">0</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Live suggestions list container -->
+              <div style="font-weight:700;font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:12px">Suggestions List</div>
+              <div class="correction-list" id="corrections-list">
+                <p class="text-center text-muted" style="font-size:13px;padding:20px">Start writing to see corrections...</p>
+              </div>
+            </div>
+
+            <!-- SECTION: AI Tools -->
+            <div class="panel-section" id="panel-rewrite">
+              <!-- Rewriter Card -->
+              <div class="ai-tool-section">
+                <div class="ai-tool-title">⚡ Tone Adjuster</div>
+                <div class="tone-chips" style="margin-bottom:12px">
+                  <span class="chip active" data-tone="professional">Professional</span>
+                  <span class="chip" data-tone="academic">Academic</span>
+                  <span class="chip" data-tone="friendly">Friendly</span>
+                  <span class="chip" data-tone="formal">Formal</span>
+                  <span class="chip" data-tone="confident">Confident</span>
+                  <span class="chip" data-tone="simple">Simple</span>
+                </div>
+                <button class="btn btn-primary btn-block btn-sm" id="ai-rewrite-btn">Apply Tone Change</button>
+              </div>
+
+              <!-- Other options -->
+              <div class="ai-tool-section" style="display:flex;flex-direction:column;gap:8px">
+                <div class="ai-tool-title">🪄 Smart Assistant</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                  <button class="btn btn-secondary btn-sm" id="ai-humanize-btn">Humanize</button>
+                  <button class="btn btn-secondary btn-sm" id="ai-summarize-btn">Summarize</button>
+                  <button class="btn btn-secondary btn-sm" id="ai-expand-btn">Expand</button>
+                  <button class="btn btn-secondary btn-sm" id="ai-shorten-btn">Shorten</button>
+                </div>
+              </div>
+
+              <!-- Rewrite Preview Area -->
+              <div id="rewrite-preview"></div>
+
+              <!-- Real-time Tone detected -->
+              <div class="ai-tool-section">
+                <div class="ai-tool-title">🎭 Detected Tone</div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <span id="tone-primary" class="badge badge-green">Neutral</span>
+                  <span id="tone-secondary" style="font-size:12px;color:var(--text-muted)"></span>
+                </div>
+              </div>
+
+              <!-- AI Detection Card -->
+              <div class="ai-tool-section">
+                <div class="ai-tool-title">🤖 AI Content Check</div>
+                <button class="btn btn-secondary btn-block btn-sm" id="detect-ai-btn">Analyze AI Probability</button>
+                <div id="ai-detect-output" style="margin-top:8px"></div>
+              </div>
+            </div>
+
+            <!-- SECTION: AI Chat Panel -->
+            <div class="panel-section" id="panel-chat" style="height:480px;display:flex;flex-direction:column">
+              <div class="ai-chat" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+                <div class="chat-messages" id="chat-messages" style="flex:1;overflow-y:auto"></div>
+                <div class="chat-input-area">
+                  <input type="text" class="chat-input" id="chat-input" placeholder="Ask AI about document...">
+                  <button class="btn btn-primary btn-sm btn-icon" id="chat-send">▶</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+      </div>
+
+      <!-- VIEW: Documents Panel -->
+      <div id="view-documents" class="view-panel hidden container" style="padding-top:24px">
+        <h2 style="margin-bottom:20px">Your Documents</h2>
+        <div class="document-list" id="doc-list">
+          <p class="text-center text-muted">Loading your files...</p>
+        </div>
+      </div>
+
+      <!-- VIEW: Templates Panel -->
+      <div id="view-templates" class="view-panel hidden container" style="padding-top:24px">
+        <h2 style="margin-bottom:12px">Document Templates</h2>
+        <p class="text-secondary" style="margin-bottom:24px">Kickstart your writing with one of our AI-optimized layouts.</p>
+        
+        <div class="templates-grid">
+          <div class="template-card" data-template="email_professional">
+            <div class="template-icon">📧</div>
+            <div class="template-name">Professional Email</div>
+            <div class="template-desc">Standard business email template.</div>
+          </div>
+          <div class="template-card" data-template="email_followup">
+            <div class="template-icon">🔄</div>
+            <div class="template-name">Follow-up Email</div>
+            <div class="template-desc">Polite follow-up for replies.</div>
+          </div>
+          <div class="template-card" data-template="blog_intro">
+            <div class="template-icon">✍️</div>
+            <div class="template-name">Blog Introduction</div>
+            <div class="template-desc">Catchy hook and intro template.</div>
+          </div>
+          <div class="template-card" data-template="cover_letter">
+            <div class="template-icon">📄</div>
+            <div class="template-name">Cover Letter</div>
+            <div class="template-desc">Professional application letter.</div>
+          </div>
+          <div class="template-card" data-template="resume_summary">
+            <div class="template-icon">👤</div>
+            <div class="template-name">Resume Summary</div>
+            <div class="template-desc">ATS-optimized bio & summary.</div>
+          </div>
+          <div class="template-card" data-template="linkedin_post">
+            <div class="template-icon">💼</div>
+            <div class="template-name">LinkedIn Post</div>
+            <div class="template-desc">High-engagement professional post.</div>
+          </div>
+          <div class="template-card" data-template="product_description">
+            <div class="template-icon">🛍️</div>
+            <div class="template-name">Product Description</div>
+            <div class="template-desc">Compelling sales copy details.</div>
+          </div>
+          <div class="template-card" data-template="essay_intro">
+            <div class="template-icon">📚</div>
+            <div class="template-name">Essay Introduction</div>
+            <div class="template-desc">APA/MLA thesis statement format.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: History Audit Log -->
+      <div id="view-history" class="view-panel hidden container" style="padding-top:24px">
+        <h2 style="margin-bottom:20px">Correction History</h2>
+        <div class="document-list" id="history-list">
+          <p class="text-center text-muted">No history found.</p>
+        </div>
+      </div>
+
+      <!-- VIEW: Translator Dashboard -->
+      <div id="view-translator" class="view-panel hidden container" style="padding-top:24px">
+        <h2 style="margin-bottom:12px">Language Translator</h2>
+        <p class="text-secondary" style="margin-bottom:20px">Translate the editor's text to a target language with auto-grammar correction.</p>
+        
+        <div class="card" style="max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:12px">
+          <div class="form-group">
+            <label class="form-label" for="translate-lang">Translate To</label>
+            <select class="form-select" id="translate-lang">
+              <option value="es" selected>Spanish (Español)</option>
+              <option value="fr">French (Français)</option>
+              <option value="de">German (Deutsch)</option>
+              <option value="it">Italian (Italiano)</option>
+              <option value="pt">Portuguese (Português)</option>
+              <option value="ja">Japanese (日本語)</option>
+              <option value="zh">Chinese (中文)</option>
+              <option value="hi">Hindi (हिंदी)</option>
+              <option value="ar">Arabic (العربية)</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="translate-btn">Translate Editor Text</button>
+          <div id="translate-output"></div>
+        </div>
+      </div>
+
+      <!-- VIEW: Vocabulary Panel -->
+      <div id="view-vocabulary" class="view-panel hidden container" style="padding-top:24px">
+        <h2 style="margin-bottom:8px">Vocabulary Enhancer</h2>
+        <p class="text-secondary" style="margin-bottom:24px">Click a suggested replacement to apply it instantly to your document.</p>
+        
+        <div class="card" style="max-width:600px;margin:0 auto">
+          <div style="font-weight:700;font-size:13px;color:var(--text-muted);text-transform:uppercase;margin-bottom:12px">Suggestions in your text</div>
+          <div style="display:flex;flex-direction:column;gap:10px" id="vocab-suggestions">
+            <p class="text-muted" style="font-size:13px;text-align:center;padding:12px">Write more words in the editor to see vocabulary suggestions...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: Analytics Panel -->
+      <div id="view-analytics" class="view-panel hidden container" style="padding-top:24px">
+        <h2 style="margin-bottom:20px">Writing Analytics</h2>
+        
+        <div class="analytics-grid" style="margin-bottom:24px">
+          <div class="analytics-metric-card">
+            <div class="analytics-metric-value" id="analytics-words">0</div>
+            <div class="analytics-metric-label">Words Checked</div>
+            <div class="analytics-metric-change change-up">↑ 12% this week</div>
+          </div>
+          <div class="analytics-metric-card">
+            <div class="analytics-metric-value" id="analytics-fixed">0</div>
+            <div class="analytics-metric-label">Mistakes Fixed</div>
+            <div class="analytics-metric-change change-up">↑ 4% this week</div>
+          </div>
+          <div class="analytics-metric-card">
+            <div class="analytics-metric-value" id="analytics-score">0</div>
+            <div class="analytics-metric-label">Average Score</div>
+            <div class="analytics-metric-change change-up">↑ 2.1 pts vs last month</div>
+          </div>
+          <div class="analytics-metric-card">
+            <div class="analytics-metric-value" id="analytics-sessions">0</div>
+            <div class="analytics-metric-label">Total Sessions</div>
+            <div class="analytics-metric-change change-up">Active status</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+          <div class="analytics-chart-card">
+            <div style="font-weight:700;font-size:14px;margin-bottom:12px">WEEKLY OUTPUT (WORDS)</div>
+            <canvas id="weekly-chart" class="chart-canvas"></canvas>
+          </div>
+          <div class="analytics-chart-card">
+            <div style="font-weight:700;font-size:14px;margin-bottom:12px">SCORE TREND (30 DAYS)</div>
+            <canvas id="score-chart" class="chart-canvas"></canvas>
+          </div>
+        </div>
+
+        <div class="analytics-chart-card" style="margin-top:24px">
+          <div style="font-weight:700;font-size:14px;margin-bottom:12px">MISTAKES BY CATEGORY</div>
+          <canvas id="errors-chart" class="chart-canvas"></canvas>
+        </div>
+      </div>
+
+      <!-- VIEW: Settings Panel -->
+      <div id="view-settings" class="view-panel hidden container" style="padding-top:24px">
+        <h2 style="margin-bottom:20px">Application Settings</h2>
+        
+        <div class="settings-container" style="max-width:600px;margin:0 auto">
+          <div class="settings-section">
+            <div class="settings-section-title">✍ Editor Preferences</div>
+            
+            <div class="settings-row">
+              <div class="settings-row-info">
+                <div class="settings-row-label">Default Font Size</div>
+                <div class="settings-row-desc">Adjust the main text editor font sizing.</div>
+              </div>
+              <select class="form-select" id="setting-font-size" style="width:120px">
+                <option value="14">14px</option>
+                <option value="16" selected>16px</option>
+                <option value="18">18px</option>
+                <option value="20">20px</option>
+              </select>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row-info">
+                <div class="settings-row-label">Font Family</div>
+                <div class="settings-row-desc">Choose your preferred writing typeface.</div>
+              </div>
+              <select class="form-select" id="setting-font-family" style="width:160px">
+                <option value="var(--font-sans)">Plus Jakarta Sans</option>
+                <option value="Inter">Inter</option>
+                <option value="Georgia">Georgia (Serif)</option>
+                <option value="Courier New">Monospace</option>
+              </select>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row-info">
+                <div class="settings-row-label">Line Spacing</div>
+                <div class="settings-row-desc">Configure line-height index: <span id="lh-value" style="font-weight:700">1.8</span></div>
+              </div>
+              <input type="range" class="range-slider" id="setting-line-height" min="1.4" max="2.4" step="0.1" value="1.8" style="width:120px">
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-title">🔍 AI Correction Controls</div>
+            
+            <div class="settings-row">
+              <div class="settings-row-info">
+                <div class="settings-row-label">Real-time Spell Checker</div>
+                <div class="settings-row-desc">Underline mistakes as you write.</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="setting-spell-check" checked>
+                <div class="toggle-track"></div>
+              </label>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row-info">
+                <div class="settings-row-label">Grammar Validation</div>
+                <div class="settings-row-desc">Validate prepositions, verbs, syntax rules.</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="setting-grammar-check" checked>
+                <div class="toggle-track"></div>
+              </label>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row-info">
+                <div class="settings-row-label">Style Suggestions</div>
+                <div class="settings-row-desc">Detect weak words, passive voice, readability.</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="setting-style-check" checked>
+                <div class="toggle-track"></div>
+              </label>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row-info">
+                <div class="settings-row-label">Autosave Document</div>
+                <div class="settings-row-desc">Automatically save drafts to browser storage every 5 seconds.</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="setting-auto-save" checked>
+                <div class="toggle-track"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: Help & Guides -->
+      <div id="view-help" class="view-panel hidden container" style="padding-top:24px">
+        <h2 style="margin-bottom:20px">Help Center & Guides</h2>
+        
+        <div style="max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+          <div class="card">
+            <h3>⌨️ Keyboard Shortcuts</h3>
+            <ul style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:14px;color:var(--text-secondary)">
+              <li><strong>Ctrl + S</strong> : Save Document</li>
+              <li><strong>Ctrl + B</strong> : Bold Text</li>
+              <li><strong>Ctrl + I</strong> : Italic Text</li>
+              <li><strong>Ctrl + U</strong> : Underline Text</li>
+              <li><strong>Ctrl + Z</strong> : Undo Action</li>
+              <li><strong>Ctrl + Y</strong> : Redo Action</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>📑 Document Export Formats</h3>
+            <p class="text-secondary" style="margin:8px 0 16px">Export your completed drafts in clean, standards-compliant formats.</p>
+            <div class="export-options">
+              <div class="export-option" id="export-txt">
+                <div class="export-option-icon">📄</div>
+                Plain Text (.txt)
+              </div>
+              <div class="export-option" id="export-md">
+                <div class="export-option-icon">📝</div>
+                Markdown (.md)
+              </div>
+              <div class="export-option" id="export-html">
+                <div class="export-option-icon">🌐</div>
+                Web HTML (.html)
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-block btn-sm" id="export-copy" style="margin-top:12px">📋 Copy Plain Text to Clipboard</button>
+          </div>
+
+          <div class="card">
+            <h3>🔊 Text-to-Speech Options</h3>
+            <p class="text-secondary" style="margin-bottom:12px">Listen to your text layout to verify tone and flow.</p>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div class="form-group">
+                <label class="form-label" for="tts-voice-select">Voice Selection</label>
+                <select class="form-select" id="tts-voice-select"></select>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div class="form-group">
+                  <label class="form-label" for="tts-rate">Read Speed</label>
+                  <input type="range" class="range-slider" id="tts-rate" min="0.5" max="2" step="0.1" value="1">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="tts-pitch">Voice Pitch</label>
+                  <input type="range" class="range-slider" id="tts-pitch" min="0.5" max="2" step="0.1" value="1">
+                </div>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button class="btn btn-primary" id="tts-btn" style="flex:1">🔊 Read Aloud</button>
+                <button class="btn btn-secondary" id="tts-stop">⏹ Stop</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Include Core Modules -->
+  <script src="js/themes.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/spellcheck.js"></script>
+  <script src="js/grammar.js"></script>
+  <script src="js/ai-assistant.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/tts.js"></script>
+  <script src="js/editor.js"></script>
+</body>
+</html>

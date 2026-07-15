@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AutoCorrect AI — Write better, instantly. AI-powered spelling correction, grammar checking, rewriting, and smart writing suggestions for professionals.">
+  <meta name="keywords" content="autocorrect, grammar checker, spell checker, AI writing assistant, writing tool, grammar fix">
+  <meta property="og:title" content="AutoCorrect AI — Write Better. Instantly.">
+  <meta property="og:description" content="AI-powered writing assistant that detects spelling mistakes, fixes grammar, and improves your writing in real-time.">
+  <title>AutoCorrect AI — Write Better. Instantly.</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+
+<!-- ============================================================
+     Toast Container
+     ============================================================ -->
+<div id="toast-container"></div>
+
+<!-- ============================================================
+     Navigation
+     ============================================================ -->
+<nav class="nav" id="main-nav">
+  <div class="nav-inner">
+    <!-- Logo -->
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">✍</div>
+      <span class="nav-logo-text">AutoCorrect<span>AI</span></span>
+    </a>
+
+    <!-- Desktop Links -->
+    <div class="nav-links">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#how-it-works" class="nav-link">How It Works</a>
+      <a href="#demo" class="nav-link">Try Demo</a>
+      <a href="#testimonials" class="nav-link">Reviews</a>
+      <a href="#pricing" class="nav-link">Pricing</a>
+      <a href="#faq" class="nav-link">FAQ</a>
+    </div>
+
+    <!-- Actions -->
+    <div class="nav-actions">
+      <button class="theme-toggle" id="theme-toggle-nav" aria-label="Toggle theme">🌙</button>
+      <a href="editor.html" class="btn btn-secondary btn-sm hide-mobile">Log In</a>
+      <a href="editor.html" class="btn btn-primary btn-sm">Try Free</a>
+      <div class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="nav-mobile-menu" id="mobile-menu">
+  <a href="#features" class="nav-link mobile-nav-link">Features</a>
+  <a href="#how-it-works" class="nav-link mobile-nav-link">How It Works</a>
+  <a href="#demo" class="nav-link mobile-nav-link">Try Demo</a>
+  <a href="#testimonials" class="nav-link mobile-nav-link">Reviews</a>
+  <a href="#pricing" class="nav-link mobile-nav-link">Pricing</a>
+  <a href="editor.html" class="btn btn-primary btn-block" style="margin-top:8px">Try Free →</a>
+</div>
+
+<!-- ============================================================
+     Hero Section
+     ============================================================ -->
+<section class="hero" id="hero">
+  <!-- Background -->
+  <div class="hero-bg">
+    <div class="hero-grid"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+  </div>
+
+  <div class="hero-inner container">
+    <!-- Text Content -->
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        ✨ Powered by Advanced AI — Now in Beta
+      </div>
+
+      <h1 class="hero-title">
+        AI Autocorrect<br>
+        <span class="gradient-text">Tool</span>
+      </h1>
+
+      <p class="hero-tagline gradient-text-warm">Write Better. Instantly.</p>
+
+      <p class="hero-subtitle">
+        Improve your writing with AI-powered spelling correction, grammar checking, rewriting, and smart suggestions. Trusted by 100,000+ writers worldwide.
+      </p>
+
+      <div class="hero-actions">
+        <a href="editor.html" class="btn btn-gradient btn-xl" id="try-now-btn">
+          ✍ Try Now — It's Free
+        </a>
+        <a href="#demo" class="btn btn-secondary btn-xl">
+          ▶ See Demo
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-value"><span data-count="100" data-suffix="K+">0</span></div>
+          <div class="hero-stat-label">Active Users</div>
+        </div>
+        <div>
+          <div class="hero-stat-value"><span data-count="50" data-suffix="M+">0</span></div>
+          <div class="hero-stat-label">Words Improved</div>
+        </div>
+        <div>
+          <div class="hero-stat-value"><span data-count="98" data-suffix="%">0</span></div>
+          <div class="hero-stat-label">Satisfaction Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demo Widget -->
+    <div class="hero-visual">
+      <!-- Floating badges -->
+      <div class="hero-floating hero-float-1">
+        <div class="float-widget">
+          <span class="float-widget-icon">🎯</span>
+          <span>Writing Score: <span class="score-mini">94</span></span>
+        </div>
+      </div>
+      <div class="hero-floating hero-float-2">
+        <div class="float-widget">
+          <span class="float-widget-icon">✅</span>
+          <span>12 issues fixed</span>
+        </div>
+      </div>
+
+      <!-- Main demo card -->
+      <div class="hero-demo-card">
+        <div class="demo-card-header">
+          <div class="demo-card-dots">
+            <div class="demo-dot demo-dot-red"></div>
+            <div class="demo-dot demo-dot-yellow"></div>
+            <div class="demo-dot demo-dot-green"></div>
+          </div>
+          <div class="demo-card-title">
+            📝 AutoCorrect AI Editor
+          </div>
+          <div class="demo-card-badge">
+            <span style="width:6px;height:6px;background:var(--primary);border-radius:50%;animation:pulse 1.5s infinite"></span>
+            Live AI
+          </div>
+        </div>
+
+        <div class="demo-card-body">
+          <div class="demo-text-area">
+            <div id="demo-text" style="min-height:80px;line-height:1.8"></div>
+          </div>
+
+          <div class="demo-corrections" id="demo-corrections"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     Trusted By
+     ============================================================ -->
+<section class="trusted">
+  <div class="container">
+    <p class="trusted-label">Trusted by teams at world-class companies</p>
+    <div class="trusted-marquee-wrapper">
+      <div class="trusted-marquee">
+        <!-- Duplicated for infinite loop -->
+        <div class="trusted-logo"><div class="trusted-logo-icon">🔵</div>Microsoft</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🔴</div>Google</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🟠</div>Amazon</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">⚫</div>Apple</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🔵</div>Meta</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🟦</div>Salesforce</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🟣</div>Slack</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🔵</div>LinkedIn</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🟥</div>Adobe</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🟢</div>Shopify</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🔵</div>Microsoft</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🔴</div>Google</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🟠</div>Amazon</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">⚫</div>Apple</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🔵</div>Meta</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🟦</div>Salesforce</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🟣</div>Slack</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🔵</div>LinkedIn</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🟥</div>Adobe</div>
+        <div class="trusted-logo"><div class="trusted-logo-icon">🟢</div>Shopify</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     Features Section
+     ============================================================ -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <div class="section-eyebrow">🚀 Core Features</div>
+      <h2 class="section-title">Everything you need to write <span class="gradient-text">brilliantly</span></h2>
+      <p class="section-subtitle">AutoCorrect AI combines the power of multiple AI engines to give you the most comprehensive writing assistance available.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card animate-on-scroll delay-1">
+        <div class="feature-icon icon-green">🔤</div>
+        <h3 class="feature-title">Spell Checker</h3>
+        <p class="feature-desc">Real-time spell detection with instant one-click corrections. Learns your style and custom vocabulary over time.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">Real-time</span>
+          <span class="feature-tag">Custom Dictionary</span>
+          <span class="feature-tag">150+ Languages</span>
+        </div>
+      </div>
+
+      <div class="feature-card animate-on-scroll delay-2">
+        <div class="feature-icon icon-blue">📝</div>
+        <h3 class="feature-title">Grammar Checker</h3>
+        <p class="feature-desc">Fixes tense, articles, prepositions, sentence fragments, run-ons, passive voice, and 250+ grammar rules.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">250+ Rules</span>
+          <span class="feature-tag">Context-Aware</span>
+          <span class="feature-tag">Explanations</span>
+        </div>
+      </div>
+
+      <div class="feature-card animate-on-scroll delay-3">
+        <div class="feature-icon icon-purple">🪄</div>
+        <h3 class="feature-title">AI Rewriter</h3>
+        <p class="feature-desc">Rewrite any text in 10+ tones: professional, academic, friendly, creative, formal, confident, and more.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">10 Tones</span>
+          <span class="feature-tag">One-click</span>
+          <span class="feature-tag">GPT-powered</span>
+        </div>
+      </div>
+
+      <div class="feature-card animate-on-scroll delay-4">
+        <div class="feature-icon icon-cyan">📊</div>
+        <h3 class="feature-title">Readability Analysis</h3>
+        <p class="feature-desc">Flesch Reading Score, grade level, sentence length analysis, passive voice percentage, and vocabulary metrics.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">Flesch Score</span>
+          <span class="feature-tag">Grade Level</span>
+          <span class="feature-tag">Complexity</span>
+        </div>
+      </div>
+
+      <div class="feature-card animate-on-scroll delay-5">
+        <div class="feature-icon icon-orange">🎭</div>
+        <h3 class="feature-title">Tone Detection</h3>
+        <p class="feature-desc">Instantly detects your writing tone — professional, casual, confident, empathetic, persuasive — and suggests improvements.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">9 Tone Types</span>
+          <span class="feature-tag">AI-Powered</span>
+          <span class="feature-tag">Suggestions</span>
+        </div>
+      </div>
+
+      <div class="feature-card animate-on-scroll delay-6">
+        <div class="feature-icon icon-pink">🌍</div>
+        <h3 class="feature-title">Language Translator</h3>
+        <p class="feature-desc">Translate text to 100+ languages instantly. Powered by advanced neural translation with grammar correction after translation.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">100+ Languages</span>
+          <span class="feature-tag">Neural AI</span>
+          <span class="feature-tag">Auto-detect</span>
+        </div>
+      </div>
+
+      <div class="feature-card animate-on-scroll delay-1">
+        <div class="feature-icon icon-yellow">📚</div>
+        <h3 class="feature-title">Vocabulary Enhancer</h3>
+        <p class="feature-desc">Suggests power words, synonyms, business vocabulary, and creative alternatives with word definitions and usage examples.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">Power Words</span>
+          <span class="feature-tag">Synonyms</span>
+          <span class="feature-tag">Definitions</span>
+        </div>
+      </div>
+
+      <div class="feature-card animate-on-scroll delay-2">
+        <div class="feature-icon icon-red">🤖</div>
+        <h3 class="feature-title">AI Text Detector</h3>
+        <p class="feature-desc">Detect AI-generated content with confidence scores. Highlight suspicious sentences and humanize AI text naturally.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">Detection</span>
+          <span class="feature-tag">Humanizer</span>
+          <span class="feature-tag">Confidence %</span>
+        </div>
+      </div>
+
+      <div class="feature-card animate-on-scroll delay-3">
+        <div class="feature-icon icon-green">🎤</div>
+        <h3 class="feature-title">Voice Typing & TTS</h3>
+        <p class="feature-desc">Dictate your text using voice typing. Read corrected text aloud with multiple voices, speed, and pitch controls.</p>
+        <div class="feature-tags">
+          <span class="feature-tag">Voice-to-Text</span>
+          <span class="feature-tag">Text-to-Speech</span>
+          <span class="feature-tag">Multiple Voices</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     How It Works
+     ============================================================ -->
+<section class="how-it-works" id="how-it-works">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <div class="section-eyebrow">⚡ Simple Process</div>
+      <h2 class="section-title">Start writing better in <span class="gradient-text">3 steps</span></h2>
+      <p class="section-subtitle">No setup required. Works instantly in your browser.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card animate-on-scroll delay-1">
+        <div class="step-number">1</div>
+        <h3 class="step-title">Paste or Type</h3>
+        <p class="step-desc">Start typing in the editor or paste your existing text. Our AI begins analyzing immediately as you write.</p>
+      </div>
+
+      <div class="step-card animate-on-scroll delay-2">
+        <div class="step-number">2</div>
+        <h3 class="step-title">Review Suggestions</h3>
+        <p class="step-desc">See real-time corrections highlighted in your text. Click any suggestion to see the explanation and apply the fix.</p>
+      </div>
+
+      <div class="step-card animate-on-scroll delay-3">
+        <div class="step-number">3</div>
+        <h3 class="step-title">Export & Share</h3>
+        <p class="step-desc">Export your polished document as TXT, DOCX, PDF, HTML, or Markdown. Share directly or copy to clipboard.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     Interactive Demo
+     ============================================================ -->
+<section class="demo-section" id="demo">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <div class="section-eyebrow">🎮 Live Demo</div>
+      <h2 class="section-title">Try it <span class="gradient-text">right now</span></h2>
+      <p class="section-subtitle">Type or paste text below and see AutoCorrect AI in action.</p>
+    </div>
+
+    <div class="demo-wrapper animate-on-scroll">
+      <!-- Toolbar -->
+      <div class="demo-toolbar">
+        <button class="demo-tool-btn active">Spell Check</button>
+        <button class="demo-tool-btn">Grammar</button>
+        <button class="demo-tool-btn">Style</button>
+        <button class="demo-tool-btn">Readability</button>
+        <div style="margin-left:auto;font-size:12px;color:var(--text-muted)">
+          Try: "teh freind should of done it"
+        </div>
+      </div>
+
+      <div class="demo-body">
+        <!-- Editor -->
+        <div class="demo-editor-area">
+          <textarea
+            id="demo-input"
+            class="demo-editable"
+            placeholder="Type or paste your text here... Try typing common mistakes like 'teh', 'freind', 'should of', 'very good', 'alot'..."
+            rows="8"
+          ></textarea>
+        </div>
+
+        <!-- Suggestions sidebar -->
+        <div class="demo-sidebar">
+          <div class="demo-score-mini">
+            <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px">WRITING SCORE</div>
+            <div style="font-size:36px;font-weight:800;color:var(--primary)">—</div>
+          </div>
+          <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px">AI Suggestions</div>
+          <div id="demo-output-area" style="display:flex;flex-direction:column;gap:8px">
+            <p class="text-muted" style="font-size:12px;text-align:center;padding:16px">Suggestions will appear here as you type...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:24px">
+      <a href="editor.html" class="btn btn-primary btn-lg">
+        Open Full Editor →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     Testimonials
+     ============================================================ -->
+<section class="testimonials" id="testimonials">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <div class="section-eyebrow">❤️ Loved by Writers</div>
+      <h2 class="section-title">What our users <span class="gradient-text">say</span></h2>
+      <p class="section-subtitle">Join 100,000+ professionals who write better with AutoCorrect AI.</p>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card animate-on-scroll delay-1">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"AutoCorrect AI completely transformed how I write professional emails. My writing is clearer, more confident, and I catch errors I never noticed before. It's like having a personal editor available 24/7."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">SC</div>
+          <div>
+            <div class="author-name">Sarah Chen</div>
+            <div class="author-role">Marketing Director, TechCorp</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card animate-on-scroll delay-2">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"As a non-native English speaker, this tool is invaluable. It not only fixes my mistakes but explains WHY they're wrong. My writing has improved dramatically in just 2 months of use."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#3B82F6,#8B5CF6)">MR</div>
+          <div>
+            <div class="author-name">Miguel Rodriguez</div>
+            <div class="author-role">Software Engineer, StartupXYZ</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card animate-on-scroll delay-3">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"The tone detection feature is genius. I use it to ensure my academic papers maintain a formal, scholarly tone throughout. The readability score helps me know exactly how complex my writing is."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#F97316,#EF4444)">JP</div>
+          <div>
+            <div class="author-name">Dr. Jennifer Park</div>
+            <div class="author-role">Professor, Stanford University</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card animate-on-scroll delay-4">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"The AI rewriter is phenomenal. I can take a rough draft and transform it into polished, professional content in seconds. The vocabulary suggestions are spot-on for business writing."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#06B6D4,#3B82F6)">AT</div>
+          <div>
+            <div class="author-name">Alex Thompson</div>
+            <div class="author-role">Content Strategist, Agency Pro</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card animate-on-scroll delay-5">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Better than Grammarly for my use case. The AI detection feature alone is worth the subscription. My students can't get away with submitting AI-generated essays anymore!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">RK</div>
+          <div>
+            <div class="author-name">Rachel Kim</div>
+            <div class="author-role">High School Teacher, NYC</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card animate-on-scroll delay-6">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"I write 10,000 words a day as a journalist. AutoCorrect AI catches every nuance — from passive voice overuse to wordiness. My editor actually noticed my writing improved before I told them I was using it!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:linear-gradient(135deg,#16A34A,#06B6D4)">DM</div>
+          <div>
+            <div class="author-name">David Martinez</div>
+            <div class="author-role">Senior Journalist, The Tribune</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     Pricing Section
+     ============================================================ -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <div class="section-eyebrow">💎 Pricing</div>
+      <h2 class="section-title">Simple, <span class="gradient-text">transparent</span> pricing</h2>
+      <p class="section-subtitle">Start free. Upgrade anytime. No hidden fees.</p>
+    </div>
+
+    <!-- Toggle -->
+    <div class="pricing-toggle-wrapper animate-on-scroll">
+      <span class="pricing-toggle-label monthly active">Monthly</span>
+      <label class="toggle" style="cursor:pointer">
+        <input type="checkbox" id="pricing-toggle">
+        <div class="toggle-track"></div>
+      </label>
+      <span class="pricing-toggle-label yearly">Yearly <span class="pricing-save-badge">Save 20%</span></span>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Free -->
+      <div class="pricing-card animate-on-scroll delay-1">
+        <div class="pricing-plan-name">Free</div>
+        <div class="pricing-price">
+          <span class="pricing-currency">$</span>
+          <span class="pricing-amount" id="price-free">0</span>
+          <span class="pricing-period">/month</span>
+        </div>
+        <p class="pricing-desc">Perfect for individuals getting started.</p>
+        <div class="pricing-features">
+          <div class="pricing-feature"><span class="pricing-check">✓</span> 5,000 words/month</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> Spell & grammar checker</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> Basic tone detection</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> 3 documents</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> TXT export</div>
+          <div class="pricing-feature"><span class="pricing-x">✗</span> AI Rewriter</div>
+          <div class="pricing-feature"><span class="pricing-x">✗</span> AI Detection</div>
+          <div class="pricing-feature"><span class="pricing-x">✗</span> Plagiarism Checker</div>
+          <div class="pricing-feature"><span class="pricing-x">✗</span> Priority AI</div>
+        </div>
+        <a href="editor.html" class="btn btn-secondary btn-block">Get Started Free</a>
+      </div>
+
+      <!-- Pro -->
+      <div class="pricing-card popular animate-on-scroll delay-2">
+        <div class="pricing-popular-badge">⭐ MOST POPULAR</div>
+        <div class="pricing-plan-name">Pro</div>
+        <div class="pricing-price">
+          <span class="pricing-currency">$</span>
+          <span class="pricing-amount" id="price-pro">19</span>
+          <span class="pricing-period">/month</span>
+        </div>
+        <p class="pricing-desc">For professionals and serious writers.</p>
+        <div class="pricing-features">
+          <div class="pricing-feature"><span class="pricing-check">✓</span> Unlimited words</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> All grammar features</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> AI Rewriter (10 tones)</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> Unlimited documents</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> All export formats</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> AI Detection</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> AI Humanizer</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> Plagiarism Checker</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> Advanced analytics</div>
+        </div>
+        <a href="editor.html" class="btn btn-primary btn-block">Start Pro Trial</a>
+      </div>
+
+      <!-- Team -->
+      <div class="pricing-card animate-on-scroll delay-3">
+        <div class="pricing-plan-name">Team</div>
+        <div class="pricing-price">
+          <span class="pricing-currency">$</span>
+          <span class="pricing-amount" id="price-team">49</span>
+          <span class="pricing-period">/month</span>
+        </div>
+        <p class="pricing-desc">For teams and organizations. Per user.</p>
+        <div class="pricing-features">
+          <div class="pricing-feature"><span class="pricing-check">✓</span> Everything in Pro</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> Team collaboration</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> Shared documents</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> Comments & suggestions</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> Admin dashboard</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> Priority AI processing</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> Custom templates</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> API access</div>
+          <div class="pricing-feature"><span class="pricing-check">✓</span> SSO & compliance</div>
+        </div>
+        <a href="editor.html" class="btn btn-outline btn-block">Contact Sales</a>
+      </div>
+    </div>
+
+    <!-- Money back guarantee -->
+    <div style="text-align:center;margin-top:32px;color:var(--text-muted);font-size:14px" class="animate-on-scroll">
+      🔒 30-day money-back guarantee &nbsp;·&nbsp; 🚫 No credit card required for free plan &nbsp;·&nbsp; ✅ Cancel anytime
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FAQ
+     ============================================================ -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <div class="section-eyebrow">❓ FAQ</div>
+      <h2 class="section-title">Frequently asked <span class="gradient-text">questions</span></h2>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item animate-on-scroll">
+        <div class="faq-question">
+          What makes AutoCorrect AI different from Grammarly?
+          <div class="faq-icon">+</div>
+        </div>
+        <div class="faq-answer">AutoCorrect AI goes beyond grammar and spelling. It includes AI text detection, AI humanization, tone transformation, readability scoring, content generation (blog posts, LinkedIn, emails), voice typing, text-to-speech, OCR, PDF editing, and a full AI chat panel — all in one platform. We also explain every correction so you learn while you write.</div>
+      </div>
+
+      <div class="faq-item animate-on-scroll">
+        <div class="faq-question">
+          Does AutoCorrect AI work in real-time?
+          <div class="faq-icon">+</div>
+        </div>
+        <div class="faq-answer">Yes! Our AI analyzes your text continuously as you type. Corrections, suggestions, readability scores, and tone detection all update within milliseconds of your last keystroke. There's no need to click a "check" button.</div>
+      </div>
+
+      <div class="faq-item animate-on-scroll">
+        <div class="faq-question">
+          Which languages does AutoCorrect AI support?
+          <div class="faq-icon">+</div>
+        </div>
+        <div class="faq-answer">AutoCorrect AI supports grammar checking in English, Spanish, French, German, Italian, Portuguese, Japanese, Chinese, Arabic, Hindi, and many more. The translator supports 100+ languages. Voice typing works in all languages supported by your browser's speech recognition.</div>
+      </div>
+
+      <div class="faq-item animate-on-scroll">
+        <div class="faq-question">
+          Is my writing data private and secure?
+          <div class="faq-icon">+</div>
+        </div>
+        <div class="faq-answer">Absolutely. Your documents are stored locally in your browser (localStorage) in the demo version. The production version uses end-to-end encryption, HTTPS, JWT authentication, and is GDPR compliant. We never sell your data to third parties. You can delete your data at any time.</div>
+      </div>
+
+      <div class="faq-item animate-on-scroll">
+        <div class="faq-question">
+          Can I use AutoCorrect AI for academic writing?
+          <div class="faq-icon">+</div>
+        </div>
+        <div class="faq-answer">Yes! AutoCorrect AI has a dedicated Academic Writing mode that helps with essay structure, research writing, citation formatting (APA, MLA, Chicago, Harvard), and maintains appropriate academic tone. The Flesch-Kincaid readability score helps you calibrate complexity for your target audience.</div>
+      </div>
+
+      <div class="faq-item animate-on-scroll">
+        <div class="faq-question">
+          How accurate is the AI detection feature?
+          <div class="faq-icon">+</div>
+        </div>
+        <div class="faq-answer">Our AI detection heuristic analyzes multiple signals including sentence length variance, transition word density, first-person usage patterns, and common AI phrases. It provides a probability score with a confidence level. Note that no AI detector is 100% accurate — treat results as one signal among many, not as definitive proof.</div>
+      </div>
+
+      <div class="faq-item animate-on-scroll">
+        <div class="faq-question">
+          Do you offer a free trial for Pro?
+          <div class="faq-icon">+</div>
+        </div>
+        <div class="faq-answer">Yes! We offer a 14-day free trial of the Pro plan with no credit card required. You get full access to all Pro features including unlimited words, AI rewriting, AI detection, plagiarism checking, and advanced analytics. After the trial, you can choose to upgrade or continue on the Free plan.</div>
+      </div>
+
+      <div class="faq-item animate-on-scroll">
+        <div class="faq-question">
+          Does AutoCorrect AI work offline?
+          <div class="faq-icon">+</div>
+        </div>
+        <div class="faq-answer">The basic spell checker and grammar rules work offline. AI features like rewriting and content generation require an internet connection as they communicate with our AI servers. We're developing a PWA (Progressive Web App) version that will support full offline editing with sync when reconnected.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CTA Section
+     ============================================================ -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-card animate-on-scroll">
+      <div class="cta-card-orb cta-orb-1"></div>
+      <div class="cta-card-orb cta-orb-2"></div>
+
+      <h2 class="cta-title">Start writing better<br>today — for free</h2>
+      <p class="cta-subtitle">Join 100,000+ writers who use AutoCorrect AI to polish their prose, fix mistakes, and write with confidence every day.</p>
+
+      <div class="cta-actions">
+        <a href="editor.html" class="btn btn-glass btn-xl">
+          ✍ Open Editor — Free
+        </a>
+        <a href="#pricing" class="btn btn-xl" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3)">
+          View Pricing →
+        </a>
+      </div>
+
+      <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-top:20px;position:relative">
+        No signup required · No credit card needed · Works in your browser
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     Footer
+     ============================================================ -->
+<footer class="footer" id="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <!-- Brand -->
+      <div>
+        <div class="nav-logo">
+          <div class="nav-logo-icon">✍</div>
+          <span class="nav-logo-text">AutoCorrect<span>AI</span></span>
+        </div>
+        <p class="footer-brand-desc">The world's most comprehensive AI writing assistant. Write better, faster, and with confidence across every platform.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Twitter">𝕏</a>
+          <a href="#" class="social-link" aria-label="LinkedIn">in</a>
+          <a href="#" class="social-link" aria-label="GitHub">⌂</a>
+          <a href="#" class="social-link" aria-label="YouTube">▶</a>
+          <a href="#" class="social-link" aria-label="Instagram">📷</a>
+        </div>
+      </div>
+
+      <!-- Product -->
+      <div>
+        <div class="footer-col-title">Product</div>
+        <div class="footer-links">
+          <a href="#features" class="footer-link">Features</a>
+          <a href="#pricing" class="footer-link">Pricing</a>
+          <a href="editor.html" class="footer-link">Editor</a>
+          <a href="#" class="footer-link">Chrome Extension</a>
+          <a href="#" class="footer-link">Mobile App</a>
+          <a href="#" class="footer-link">API</a>
+        </div>
+      </div>
+
+      <!-- Resources -->
+      <div>
+        <div class="footer-col-title">Resources</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Documentation</a>
+          <a href="#" class="footer-link">Writing Guide</a>
+          <a href="#" class="footer-link">Grammar Rules</a>
+          <a href="#" class="footer-link">Blog</a>
+          <a href="#" class="footer-link">Changelog</a>
+          <a href="#faq" class="footer-link">FAQ</a>
+        </div>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <div class="footer-col-title">Company</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">About Us</a>
+          <a href="#" class="footer-link">Careers</a>
+          <a href="#" class="footer-link">Press</a>
+          <a href="#" class="footer-link">Partners</a>
+          <a href="#" class="footer-link">Contact</a>
+          <a href="#" class="footer-link">Status</a>
+        </div>
+      </div>
+
+      <!-- Legal -->
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Service</a>
+          <a href="#" class="footer-link">Cookie Policy</a>
+          <a href="#" class="footer-link">GDPR</a>
+          <a href="#" class="footer-link">Security</a>
+          <a href="#" class="footer-link">Accessibility</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 AutoCorrect AI. All rights reserved. Built with ❤️ for writers everywhere.</p>
+      <div class="footer-bottom-links">
+        <a href="#" class="footer-link">Privacy</a>
+        <a href="#" class="footer-link">Terms</a>
+        <a href="#" class="footer-link">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/themes.js"></script>
+<script src="js/landing.js"></script>
+</body>
+</html>
