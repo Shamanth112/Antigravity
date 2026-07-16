@@ -180,7 +180,7 @@
 
 .hero-orb-1 {
   width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(22,163,74,0.2) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(16,185,129,0.2) 0%, transparent 70%);
   top: -200px; right: -200px;
   animation-delay: 0s;
 }
@@ -204,8 +204,8 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(to right, rgba(22,163,74,0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(22,163,74,0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(16,185,129,0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16,185,129,0.04) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
@@ -233,7 +233,7 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-4);
   background: var(--primary-subtle);
-  border: 1px solid rgba(22,163,74,0.2);
+  border: 1px solid rgba(16,185,129,0.2);
   border-radius: var(--radius-full);
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
@@ -414,7 +414,7 @@
 }
 
 .demo-correction-item.error { border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.04); }
-.demo-correction-item.suggestion { border-color: rgba(22,163,74,0.3); background: rgba(22,163,74,0.04); }
+.demo-correction-item.suggestion { border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.04); }
 
 .demo-correction-type {
   font-size: var(--text-xs);
@@ -426,7 +426,7 @@
 
 .type-spell { background: rgba(239,68,68,0.15); color: var(--accent-red); }
 .type-grammar { background: rgba(234,179,8,0.15); color: var(--accent-yellow); }
-.type-style { background: rgba(22,163,74,0.15); color: var(--primary); }
+.type-style { background: rgba(16,185,129,0.15); color: var(--primary); }
 
 .demo-correction-text { flex: 1; color: var(--text-secondary); }
 .demo-correction-fix {
@@ -743,7 +743,7 @@
   transition: var(--transition-base);
 }
 
-.faq-item.open { border-color: var(--primary); box-shadow: 0 0 0 1px rgba(22,163,74,0.1); }
+.faq-item.open { border-color: var(--primary); box-shadow: 0 0 0 1px rgba(16,185,129,0.1); }
 
 .faq-question {
   display: flex;
@@ -995,7 +995,7 @@
 .demo-tool-btn:hover, .demo-tool-btn.active {
   background: var(--primary-subtle);
   color: var(--primary);
-  border-color: rgba(22,163,74,0.3);
+  border-color: rgba(16,185,129,0.3);
 }
 
 .demo-body {

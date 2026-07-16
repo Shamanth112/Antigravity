@@ -4,7 +4,7 @@
  */
 
 const SpellChecker = (() => {
-  // Common English dictionary (abbreviated for performance — key words)
+  // Common English dictionary
   const DICTIONARY = new Set([
     'the','be','to','of','and','a','in','that','have','it','for','not','on','with','he',
     'as','you','do','at','this','but','his','by','from','they','we','say','her','she',
@@ -94,6 +94,7 @@ const SpellChecker = (() => {
     'different','similar','same','equal','opposite','various','several','many','few','some','all',
     'every','each','both','either','neither','another','other','else','only','just','even','still',
     'already','yet','soon','often','sometimes','never','always','usually','rarely','seldom',
+    'accurate', 'accurately', 'improve', 'improvements', 'task', 'press', 'pressing'
   ]);
 
   const CUSTOM_DICTIONARY = new Set();
@@ -137,6 +138,9 @@ const SpellChecker = (() => {
     'wont': "won't", 'isnt': "isn't", 'wasnt': "wasn't", 'didnt': "didn't",
     'hasnt': "hasn't", 'havent': "haven't", 'wouldnt': "wouldn't", 'shouldnt': "shouldn't",
     'couldnt': "couldn't", 'doesnt': "doesn't", 'arent': "aren't", 'werent': "weren't",
+    'shoudl': 'should', 'arond': 'around', 'donot': 'do not', 'realy': 'really',
+    'definetly': 'definitely', 'becuase': 'because', 'acurate': 'accurate',
+    'acurately': 'accurately', 'texet': 'text', 'lookig': 'looking'
   };
 
   // Levenshtein distance for suggestions
@@ -173,11 +177,91 @@ const SpellChecker = (() => {
     return candidates.slice(0, maxSuggestions).map(c => c.word);
   }
 
+  function checkWordInflections(w) {
+    if (DICTIONARY.has(w) || CUSTOM_DICTIONARY.has(w)) return true;
+
+    // Check simple suffix inflections
+    // 1. Plural or 3rd person singular verb ending in "s" or "es"
+    if (w.endsWith('s')) {
+      // e.g. "books" -> "book", "starts" -> "start"
+      let stem = w.slice(0, -1);
+      if (DICTIONARY.has(stem) || CUSTOM_DICTIONARY.has(stem)) return true;
+
+      // e.g. "boxes" -> "box", "goes" -> "go" (ends with "es")
+      if (w.endsWith('es')) {
+        stem = w.slice(0, -2);
+        if (DICTIONARY.has(stem) || CUSTOM_DICTIONARY.has(stem)) return true;
+      }
+
+      // e.g. "tries" -> "try" (ends with "ies")
+      if (w.endsWith('ies')) {
+        stem = w.slice(0, -3) + 'y';
+        if (DICTIONARY.has(stem) || CUSTOM_DICTIONARY.has(stem)) return true;
+      }
+    }
+
+    // 2. Past tense ending in "ed"
+    if (w.endsWith('ed')) {
+      // e.g. "started" -> "start", "walked" -> "walk"
+      let stem = w.slice(0, -2);
+      if (DICTIONARY.has(stem) || CUSTOM_DICTIONARY.has(stem)) return true;
+
+      // e.g. "solved" -> "solve" (ends with "d" where base ended in "e")
+      stem = w.slice(0, -1);
+      if (DICTIONARY.has(stem) || CUSTOM_DICTIONARY.has(stem)) return true;
+
+      // e.g. "carried" -> "carry" (ends with "ied" where base ended in "y")
+      if (w.endsWith('ied')) {
+        stem = w.slice(0, -3) + 'y';
+        if (DICTIONARY.has(stem) || CUSTOM_DICTIONARY.has(stem)) return true;
+      }
+
+      // e.g. "stopped" -> "stop" (double consonant)
+      stem = w.slice(0, -2);
+      if (stem.length > 2 && stem[stem.length - 1] === stem[stem.length - 2]) {
+        let singleStem = stem.slice(0, -1);
+        if (DICTIONARY.has(singleStem) || CUSTOM_DICTIONARY.has(singleStem)) return true;
+      }
+    }
+
+    // 3. Progressive tense ending in "ing"
+    if (w.endsWith('ing')) {
+      // e.g. "starting" -> "start"
+      let stem = w.slice(0, -3);
+      if (DICTIONARY.has(stem) || CUSTOM_DICTIONARY.has(stem)) return true;
+
+      // e.g. "creating" -> "create" (replacing "ing" with "e")
+      stem = w.slice(0, -3) + 'e';
+      if (DICTIONARY.has(stem) || CUSTOM_DICTIONARY.has(stem)) return true;
+
+      // e.g. "running" -> "run" (double consonant before "ing")
+      stem = w.slice(0, -3);
+      if (stem.length > 2 && stem[stem.length - 1] === stem[stem.length - 2]) {
+        let singleStem = stem.slice(0, -1);
+        if (DICTIONARY.has(singleStem) || CUSTOM_DICTIONARY.has(singleStem)) return true;
+      }
+    }
+
+    // 4. Adverbs ending in "ly"
+    if (w.endsWith('ly')) {
+      // e.g. "quickly" -> "quick"
+      let stem = w.slice(0, -2);
+      if (DICTIONARY.has(stem) || CUSTOM_DICTIONARY.has(stem)) return true;
+
+      // e.g. "happily" -> "happy"
+      if (w.endsWith('ily')) {
+        stem = w.slice(0, -3) + 'y';
+        if (DICTIONARY.has(stem) || CUSTOM_DICTIONARY.has(stem)) return true;
+      }
+    }
+
+    return false;
+  }
+
   function isCorrect(word) {
     const w = word.toLowerCase().replace(/[^a-z']/g, '');
     if (!w || w.length <= 1) return true;
-    if (DICTIONARY.has(w)) return true;
-    if (CUSTOM_DICTIONARY.has(w)) return true;
+    if (checkWordInflections(w)) return true;
     if (/^\d+$/.test(w)) return true; // Numbers
     return false;
   }
