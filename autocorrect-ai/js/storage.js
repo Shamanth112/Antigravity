@@ -22,6 +22,7 @@ const Storage = (() => {
       autoSave: true,
       autoSaveInterval: 5000,
       spellCheck: true,
+      autoCorrect: true,
       grammarCheck: true,
       styleCheck: true,
       correctionSensitivity: 'medium',

@@ -840,16 +840,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Toggles
-    ['spell-check', 'grammar-check', 'style-check', 'auto-save'].forEach(id => {
+    // Toggles
+    const s = Storage.getSettings();
+    ['spell-check', 'grammar-check', 'style-check', 'auto-correct', 'auto-save'].forEach(id => {
       const el = document.getElementById(`setting-${id}`);
-      el?.addEventListener('change', function() {
-        Storage.saveSetting(id.replace(/-/g, '_'), this.checked);
-        if (id === 'auto-save' && this.checked) scheduleAutosave();
-      });
+      if (el) {
+        const key = id.replace(/-/g, '_');
+        el.checked = s[key] !== undefined ? s[key] : true;
+        el.addEventListener('change', function() {
+          Storage.saveSetting(key, this.checked);
+          if (id === 'auto-save' && this.checked) scheduleAutosave();
+        });
+      }
     });
 
     // Apply saved settings
-    const s = Storage.getSettings();
     const fontSizeEl = document.getElementById('setting-font-size');
     if (fontSizeEl) fontSizeEl.value = s.fontSize;
     if (s.fontSize) getEditor().style.fontSize = s.fontSize + 'px';
@@ -1040,8 +1045,77 @@ document.addEventListener('DOMContentLoaded', () => {
       Storage.addToHistory({ action: 'Edit', docId: currentDoc?.id });
     });
 
+    function handleAutocorrect(e) {
+      const selection = window.getSelection();
+      if (!selection.rangeCount) return;
+      const range = selection.getRangeAt(0);
+      if (!range.collapsed) return;
+
+      const container = range.startContainer;
+      if (container.nodeType !== Node.TEXT_NODE) return;
+
+      const text = container.textContent;
+      const offset = range.startOffset;
+      const textBefore = text.slice(0, offset);
+
+      // Match word at the end, possibly followed by punctuation (but not space)
+      const match = textBefore.match(/([a-zA-Z']+)[^a-zA-Z'\s]*$/);
+      if (!match) return;
+
+      const word = match[1];
+
+      // Check if the word is misspelled
+      if (SpellChecker.isCorrect(word)) return;
+
+      // Get suggestions
+      const suggestions = SpellChecker.getSuggestions(word);
+      if (!suggestions || suggestions.length === 0) return;
+
+      const rawCorrection = suggestions[0];
+
+      // Match original casing
+      let correction = rawCorrection;
+      if (word === word.toUpperCase()) {
+        correction = rawCorrection.toUpperCase();
+      } else if (word[0] === word[0].toUpperCase()) {
+        correction = rawCorrection.charAt(0).toUpperCase() + rawCorrection.slice(1);
+      }
+
+      // Calculate start and end offsets of the word in the text node
+      const wordStartOffset = offset - match[0].length;
+      const wordEndOffset = wordStartOffset + word.length;
+
+      // Create a range selecting the misspelled word
+      const wordRange = document.createRange();
+      wordRange.setStart(container, wordStartOffset);
+      wordRange.setEnd(container, wordEndOffset);
+
+      // Select the word
+      selection.removeAllRanges();
+      selection.addRange(wordRange);
+
+      // Replace the selection with the corrected word
+      document.execCommand('insertText', false, correction);
+
+      // Add to history and stats
+      Storage.addToHistory({ action: `Auto-corrected: "${word}" → "${correction}"`, docId: currentDoc?.id });
+      Storage.updateStats({ mistakesFixed: 1 });
+      showToast(`Auto-corrected: "${word}" → "${correction}"`, 'success', 2000);
+
+      // Schedule analysis update
+      scheduleAnalysis(300);
+      scheduleAutosave();
+    }
+
     // Keyboard shortcuts
     editor.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Spacebar') {
+        const currentSettings = Storage.getSettings();
+        if (currentSettings.autoCorrect && currentSettings.spellCheck) {
+          handleAutocorrect(e);
+        }
+      }
+
       if (e.ctrlKey || e.metaKey) {
         switch (e.key) {
           case 's': e.preventDefault(); saveCurrentDocument(); showToast('Saved!', 'success'); break;
