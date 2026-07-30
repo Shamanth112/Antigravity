@@ -734,8 +734,7 @@ const SpellChecker = (() => {
     const maxDist = w.length <= 4 ? 1 : w.length <= 8 ? 2 : 3;
 
     for (const dictWord of DICTIONARY) {
-      if (Math.abs(dictWord.length - w.length) > maxDist) continue;
-      if (w[0] !== dictWord[0] && w.length <= 5) continue; // short words must match first letter
+      if (w[0] !== dictWord[0] && w.length <= 3) continue; // only restrict 1-3 letter words from random first-letter swaps
 
       const dist = levenshtein(w, dictWord);
       if (dist > maxDist || dist === 0) continue;
