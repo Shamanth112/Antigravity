@@ -1085,9 +1085,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================================================
-    // Google AI AutoCorrect — Word-level (on Space)
+    // Google AI AutoCorrect — Word-level (Instant on Space)
     // ============================================================
-    async function handleAutocorrect(e) {
+    function handleAutocorrect(e) {
       const selection = window.getSelection();
       if (!selection.rangeCount) return;
       const range = selection.getRangeAt(0);
@@ -1107,8 +1107,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const word = match[1];
       if (word.length < 2) return;
 
-      // Ask Google AI to correct this word (with context)
-      const correction = await window.GoogleAI.autoCorrectWord(word, textBefore);
+      // Instant High-Precision AI Correction lookup
+      const correction = window.GoogleAI ? window.GoogleAI.autoCorrectWordSync(word) : null;
       if (!correction || correction.toLowerCase() === word.toLowerCase()) return;
 
       // Preserve original casing
@@ -1119,23 +1119,24 @@ document.addEventListener('DOMContentLoaded', () => {
         finalCorrection = correction.charAt(0).toUpperCase() + correction.slice(1);
       }
 
-      // Select the misspelled word in the text node
+      // Calculate exact start and end offsets of misspelled word in text node
       const wordStart = offset - match[0].length;
       const wordEnd = wordStart + word.length;
+
       const wordRange = document.createRange();
       wordRange.setStart(container, wordStart);
       wordRange.setEnd(container, wordEnd);
 
+      // Select misspelled word and replace instantly BEFORE browser space insertion
       selection.removeAllRanges();
       selection.addRange(wordRange);
 
-      // Replace with AI-corrected word
       document.execCommand('insertText', false, finalCorrection);
 
       // Silent logging
       Storage.addToHistory({ action: `AI: "${word}" → "${finalCorrection}"`, docId: currentDoc?.id });
       Storage.updateStats({ mistakesFixed: 1 });
-      scheduleAnalysis(300);
+      scheduleAnalysis(200);
       scheduleAutosave();
     }
 

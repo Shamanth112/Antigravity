@@ -15,6 +15,19 @@ const GoogleAI = (() => {
   }
 
   /**
+   * Synchronous high-speed word autocorrect (for instant keydown execution)
+   */
+  function autoCorrectWordSync(word) {
+    if (!word || word.length < 2) return word;
+    if (window.SpellChecker) {
+      if (window.SpellChecker.isCorrect(word)) return word;
+      const suggestions = window.SpellChecker.getSuggestions(word);
+      if (suggestions && suggestions.length > 0) return suggestions[0];
+    }
+    return word;
+  }
+
+  /**
    * Word-level AutoCorrect
    * Cloud: Gemini API | Local: SpellChecker engine
    */
@@ -168,6 +181,7 @@ const GoogleAI = (() => {
     getApiKey,
     setApiKey,
     autoCorrectWord,
+    autoCorrectWordSync,
     correctSentence,
     autoCorrectText
   };
