@@ -674,18 +674,24 @@ document.addEventListener('DOMContentLoaded', () => {
       navigator.clipboard.writeText(getPlainText()).then(() => showToast('Copied to clipboard!', 'success'));
     });
 
-    // Import
+    // Import — reset value so the same file can be imported again
     document.getElementById('import-file')?.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = (ev) => {
         const text = ev.target.result;
-        getEditor().innerHTML = text.replace(/\n/g, '<br>');
+        // Preserve line breaks; escape any HTML if plain text
+        const isHtml = file.name.endsWith('.html') || file.name.endsWith('.htm');
+        getEditor().innerHTML = isHtml ? text : text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br>');
         scheduleAnalysis(300);
-        showToast(`Imported: ${file.name}`, 'success');
+        saveCurrentDocument();
+        showToast(`✅ Imported: ${file.name}`, 'success');
       };
+      reader.onerror = () => showToast('Failed to read file', 'error');
       reader.readAsText(file);
+      // Reset so the same file can be re-imported
+      e.target.value = '';
     });
   }
 
@@ -712,16 +718,31 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // Use data attributes + event delegation so delete/open don't conflict
     container.innerHTML = docs.map(doc => `
-      <div class="document-item" onclick="Editor.openDocument('${doc.id}')">
+      <div class="document-item" data-doc-id="${doc.id}" data-action="open">
         <div class="document-icon">📄</div>
         <div class="document-info">
           <div class="document-name">${doc.title}</div>
           <div class="document-meta">${doc.wordCount || 0} words · ${formatDate(doc.updatedAt)}</div>
         </div>
-        <button class="btn btn-ghost btn-icon-sm" onclick="event.stopPropagation();Editor.deleteDocument('${doc.id}')" title="Delete">🗑</button>
+        <button class="btn btn-ghost btn-icon-sm" data-doc-id="${doc.id}" data-action="delete" title="Delete">🗑</button>
       </div>
     `).join('');
+
+    // Single delegated listener replaces all inline onclick handlers
+    container.onclick = (e) => {
+      const deleteBtn = e.target.closest('[data-action="delete"]');
+      if (deleteBtn) {
+        e.stopPropagation();
+        Editor.deleteDocument(deleteBtn.dataset.docId);
+        return;
+      }
+      const openItem = e.target.closest('[data-action="open"]');
+      if (openItem) {
+        Editor.openDocument(openItem.dataset.docId);
+      }
+    };
   }
 
   function renderHistory() {
@@ -881,19 +902,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Voice Typing
   // ============================================================
   function bindVoiceTyping() {
-    document.getElementById('voice-btn')?.addEventListener('click', () => {
-      if (!VoiceTyping.isSupported()) {
-        showToast('Voice typing not supported in this browser', 'error');
-        return;
-      }
-
-      VoiceTyping.toggle('en-US');
-
-      if (VoiceTyping.isListening()) {
-        showToast('🎤 Voice typing started', 'info');
-      }
-    });
-
+    // Init the recognition engine first so callbacks are wired up
     VoiceTyping.init(
       ({ final, interim }) => {
         const editor = getEditor();
@@ -908,6 +917,23 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast(`Voice error: ${error}`, 'error');
       }
     );
+
+    document.getElementById('voice-btn')?.addEventListener('click', () => {
+      if (!VoiceTyping.isSupported()) {
+        showToast('Voice typing not supported in this browser', 'error');
+        return;
+      }
+
+      // Check BEFORE toggling so we know which direction we're going
+      const wasListening = VoiceTyping.isListening();
+      VoiceTyping.toggle('en-US');
+
+      if (!wasListening) {
+        showToast('🎤 Voice typing started — speak now', 'info');
+      } else {
+        showToast('🎤 Voice typing stopped', 'info');
+      }
+    });
   }
 
   // ============================================================
