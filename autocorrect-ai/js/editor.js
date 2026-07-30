@@ -1069,44 +1069,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ============================================================
-  // Google AI AutoCorrect Integration
-  // ============================================================
-  document.getElementById('google-ai-btn')?.addEventListener('click', async () => {
-    const text = getPlainText();
-    if (!text || !text.trim()) {
-      showToast('Please type or paste some text first.', 'warning');
-      return;
-    }
 
-    const btn = document.getElementById('google-ai-btn');
-    const originalHtml = btn ? btn.innerHTML : '✨ Google AI Fix';
-    if (btn) {
-      btn.innerHTML = '⏳ AI Fixing...';
-      btn.disabled = true;
-    }
-
-    try {
-      showToast('🤖 Google AI is proofreading & auto-correcting...', 'info', 2500);
-      const result = await window.GoogleAI.autoCorrectText(text);
-
-      if (result.correctedText && result.correctedText !== text) {
-        getEditor().innerText = result.correctedText;
-        scheduleAnalysis(200);
-        saveCurrentDocument();
-        showToast(`✨ ${result.source}: Fixed ${result.changesCount} issue(s)!`, 'success', 4000);
-      } else {
-        showToast('✅ Text is clean! No errors detected.', 'success', 3000);
-      }
-    } catch (err) {
-      showToast(`AI Error: ${err.message}`, 'error');
-    } finally {
-      if (btn) {
-        btn.innerHTML = originalHtml;
-        btn.disabled = false;
-      }
-    }
-  });
 
   // ============================================================
   // Editor Events
@@ -1173,10 +1136,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Replace the selection with the corrected word
       document.execCommand('insertText', false, correction);
 
-      // Add to history and stats
+      // Add to history and stats (silently)
       Storage.addToHistory({ action: `Auto-corrected: "${word}" → "${correction}"`, docId: currentDoc?.id });
       Storage.updateStats({ mistakesFixed: 1 });
-      showToast(`Auto-corrected: "${word}" → "${correction}"`, 'success', 2000);
 
       // Schedule analysis update
       scheduleAnalysis(300);
