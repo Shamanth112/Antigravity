@@ -117,6 +117,11 @@
         <div class="topbar-right">
           <button class="theme-toggle" title="Toggle Theme">🌙</button>
           
+          <!-- Google AI AutoCorrect Trigger -->
+          <button class="btn btn-primary btn-sm" id="google-ai-btn" title="Auto-correct all errors with Google AI">
+            ✨ Google AI Fix
+          </button>
+
           <!-- Voice Typing Trigger -->
           <button class="btn btn-outline btn-sm" id="voice-btn" title="Start voice dictation">
             🎤 Voice Type
@@ -558,6 +563,17 @@
             
             <div class="settings-row">
               <div class="settings-row-info">
+                <div class="settings-row-label">🤖 Google Gemini API Key (Optional)</div>
+                <div class="settings-row-desc">Connect Google Gemini 1.5 Flash Cloud AI for live deep proofreading.</div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="password" id="setting-gemini-key" placeholder="AIzaSy..." class="toolbar-select" style="width:160px;padding:6px 10px">
+                <button class="btn btn-primary btn-sm" id="save-gemini-key-btn">Save Key</button>
+              </div>
+            </div>
+            
+            <div class="settings-row">
+              <div class="settings-row-info">
                 <div class="settings-row-label">Real-time Spell Checker</div>
                 <div class="settings-row-desc">Underline mistakes as you write.</div>
               </div>
@@ -636,6 +652,7 @@
   <script src="js/ai-assistant.js"></script>
   <script src="js/analytics.js"></script>
   <script src="js/tts.js"></script>
+  <script src="js/gemini.js"></script>
   <script src="js/editor.js"></script>
 </body>
 </html>

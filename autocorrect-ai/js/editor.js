@@ -880,6 +880,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (fontSizeEl) fontSizeEl.value = s.fontSize;
     if (s.fontSize) getEditor().style.fontSize = s.fontSize + 'px';
     if (s.fontFamily) getEditor().style.fontFamily = s.fontFamily;
+
+    // Gemini API Key
+    const geminiInput = document.getElementById('setting-gemini-key');
+    if (geminiInput && window.GoogleAI) {
+      geminiInput.value = window.GoogleAI.getApiKey();
+    }
+    document.getElementById('save-gemini-key-btn')?.addEventListener('click', () => {
+      const val = document.getElementById('setting-gemini-key')?.value || '';
+      if (window.GoogleAI) {
+        window.GoogleAI.setApiKey(val);
+        showToast(val ? '🔑 Google Gemini API Key saved!' : 'Gemini API Key cleared.', 'success');
+      }
+    });
   }
 
   // ============================================================
@@ -1053,6 +1066,45 @@ document.addEventListener('DOMContentLoaded', () => {
       currentDoc.title = newName;
       saveCurrentDocument();
       updateDocTitle();
+    }
+  });
+
+  // ============================================================
+  // Google AI AutoCorrect Integration
+  // ============================================================
+  document.getElementById('google-ai-btn')?.addEventListener('click', async () => {
+    const text = getPlainText();
+    if (!text || !text.trim()) {
+      showToast('Please type or paste some text first.', 'warning');
+      return;
+    }
+
+    const btn = document.getElementById('google-ai-btn');
+    const originalHtml = btn ? btn.innerHTML : '✨ Google AI Fix';
+    if (btn) {
+      btn.innerHTML = '⏳ AI Fixing...';
+      btn.disabled = true;
+    }
+
+    try {
+      showToast('🤖 Google AI is proofreading & auto-correcting...', 'info', 2500);
+      const result = await window.GoogleAI.autoCorrectText(text);
+
+      if (result.correctedText && result.correctedText !== text) {
+        getEditor().innerText = result.correctedText;
+        scheduleAnalysis(200);
+        saveCurrentDocument();
+        showToast(`✨ ${result.source}: Fixed ${result.changesCount} issue(s)!`, 'success', 4000);
+      } else {
+        showToast('✅ Text is clean! No errors detected.', 'success', 3000);
+      }
+    } catch (err) {
+      showToast(`AI Error: ${err.message}`, 'error');
+    } finally {
+      if (btn) {
+        btn.innerHTML = originalHtml;
+        btn.disabled = false;
+      }
     }
   });
 
