@@ -1103,28 +1103,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const word = match[1];
 
-      // Skip valid words immediately (dictionary + inflection aware)
-      if (SpellChecker.isCorrect(word)) return;
-
-      // Get AI AutoCorrect top suggestion
-      const suggestions = SpellChecker.getSuggestions(word);
-      if (!suggestions || suggestions.length === 0) return;
-
-      const rawCorrection = suggestions[0];
+      // Pure Google AI AutoCorrect
+      const correction = await window.GoogleAI.autoCorrectWord(word, textBefore);
+      if (!correction || correction === word) return;
 
       // Match original casing
-      let correction = rawCorrection;
+      let finalCorrection = correction;
       if (word === word.toUpperCase()) {
-        correction = rawCorrection.toUpperCase();
+        finalCorrection = correction.toUpperCase();
       } else if (word[0] === word[0].toUpperCase()) {
-        correction = rawCorrection.charAt(0).toUpperCase() + rawCorrection.slice(1);
+        finalCorrection = correction.charAt(0).toUpperCase() + correction.slice(1);
       }
 
       // Calculate start and end offsets of the word in the text node
       const wordStartOffset = offset - match[0].length;
       const wordEndOffset = wordStartOffset + word.length;
 
-      // Create a range selecting the misspelled word
+      // Create a range selecting the word
       const wordRange = document.createRange();
       wordRange.setStart(container, wordStartOffset);
       wordRange.setEnd(container, wordEndOffset);
@@ -1133,11 +1128,11 @@ document.addEventListener('DOMContentLoaded', () => {
       selection.removeAllRanges();
       selection.addRange(wordRange);
 
-      // Replace the selection with the corrected word
-      document.execCommand('insertText', false, correction);
+      // Replace the selection with the Google AI corrected word
+      document.execCommand('insertText', false, finalCorrection);
 
       // Add to history and stats (silently)
-      Storage.addToHistory({ action: `Auto-corrected: "${word}" → "${correction}"`, docId: currentDoc?.id });
+      Storage.addToHistory({ action: `Google AI Auto-corrected: "${word}" → "${finalCorrection}"`, docId: currentDoc?.id });
       Storage.updateStats({ mistakesFixed: 1 });
 
       // Schedule analysis update
@@ -1145,13 +1140,31 @@ document.addEventListener('DOMContentLoaded', () => {
       scheduleAutosave();
     }
 
-    // Keyboard shortcuts
+    // Keyboard shortcuts & AI AutoCorrect triggers
     editor.addEventListener('keydown', (e) => {
       if (e.key === ' ' || e.key === 'Spacebar') {
         const currentSettings = Storage.getSettings();
         if (currentSettings.autoCorrect && currentSettings.spellCheck) {
           handleAutocorrect(e);
         }
+      }
+
+      // Sentence-level Google AI AutoCorrect on sentence completion
+      if (['.', '!', '?', 'Enter'].includes(e.key)) {
+        setTimeout(async () => {
+          const currentSettings = Storage.getSettings();
+          if (currentSettings.autoCorrect && window.GoogleAI) {
+            const rawText = getPlainText();
+            if (rawText && rawText.length > 5) {
+              const fixed = await window.GoogleAI.correctSentence(rawText);
+              if (fixed && fixed !== rawText && Math.abs(fixed.length - rawText.length) < 30) {
+                getEditor().innerText = fixed;
+                scheduleAnalysis(300);
+                saveCurrentDocument();
+              }
+            }
+          }
+        }, 150);
       }
 
       if (e.ctrlKey || e.metaKey) {
