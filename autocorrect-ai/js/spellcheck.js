@@ -41,7 +41,7 @@ const SpellChecker = (() => {
     'cow','job','edge','sign','visit','past','soft','fun','bright','gas','weather','month','million',
     'bear','finish','happy','hope','flower','clothe','strange','gone','jump','baby','eight','village',
     'meet','root','buy','raise','solve','metal','whether','push','seven','paragraph','third','shall',
-    'held','hair','describe','cook','floor','either','result','burn','hill','safe','cat','century',
+    'held','help','helped','helping','helpers','helper','helps','hair','describe','cook','floor','either','result','burn','hill','safe','cat','century',
     'consider','type','law','bit','coast','copy','phrase','silent','tall','sand','soil','roll',
     'temperature','finger','industry','value','fight','lie','beat','excite','natural','view','sense',
     'ear','else','quite','broke','case','middle','kill','son','lake','moment','scale','loud','spring',
@@ -81,7 +81,6 @@ const SpellChecker = (() => {
     'writing','reading','document','text','content','paragraph','section','chapter','introduction',
     'conclusion','argument','evidence','analysis','summary','description','narration','persuasion',
     'academic','business','creative','technical','scientific','medical','legal','financial','marketing',
-    // Additional common words
     'hello','world','please','thank','thanks','welcome','goodbye','sorry','excuse','certainly',
     'absolutely','definitely','probably','possibly','usually','generally','specifically','particularly',
     'especially','recently','currently','previously','eventually','immediately','suddenly','quickly',
@@ -94,7 +93,28 @@ const SpellChecker = (() => {
     'different','similar','same','equal','opposite','various','several','many','few','some','all',
     'every','each','both','either','neither','another','other','else','only','just','even','still',
     'already','yet','soon','often','sometimes','never','always','usually','rarely','seldom',
-    'accurate', 'accurately', 'improve', 'improvements', 'task', 'press', 'pressing'
+    'accurate','accurately','improve','improvements','task','press','pressing',
+    // Modern Web & Tech Vocabulary
+    'blog','blogs','blogger','blogging','title','titles','heading','headings','subheading','subheadings',
+    'app','apps','application','applications','user','users','username','username','profile','profiles',
+    'login','logout','signup','signin','signout','account','accounts','password','passwords',
+    'email','emails','mail','inbox','message','messages','messaging','chat','chats','chatting',
+    'comment','comments','commented','commenting','post','posts','posted','posting',
+    'site','sites','website','websites','webpage','webpages','link','links','linked','linking',
+    'page','pages','paged','paging','layout','layouts','design','designs','designed','designing',
+    'feature','features','featured','option','options','setting','settings','preference','preferences',
+    'data','dataset','database','file','files','folder','folders','directory','directories',
+    'code','coder','coding','script','scripts','program','programs','programming','programmer',
+    'software','hardware','system','systems','device','devices','mobile','desktop','tablet',
+    'online','offline','network','internet','web','cloud','server','servers','client','clients',
+    'download','downloads','upload','uploads','import','imports','export','exports',
+    'media','image','images','photo','photos','video','videos','audio','audios','sound','sounds',
+    'icon','icons','button','buttons','menu','menus','nav','navbar','sidebar','topbar','header','footer',
+    'screen','screens','panel','panels','dashboard','dashboards','view','views','modal','modals',
+    'form','forms','input','inputs','select','selects','check','checkbox','radio','toggle','slider',
+    'card','cards','list','lists','table','tables','column','columns','row','rows','cell','cells',
+    'stat','stats','statistics','analytics','metric','metrics','report','reports','chart','charts',
+    'history','log','logs','status','state','session','sessions','token','auth','api','url'
   ]);
 
   const CUSTOM_DICTIONARY = new Set();

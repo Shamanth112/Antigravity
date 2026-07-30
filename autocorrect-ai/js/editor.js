@@ -1091,11 +1091,13 @@ document.addEventListener('DOMContentLoaded', () => {
       // Check if the word is misspelled
       if (SpellChecker.isCorrect(word)) return;
 
-      // Get suggestions
-      const suggestions = SpellChecker.getSuggestions(word);
-      if (!suggestions || suggestions.length === 0) return;
+      // Only auto-correct on spacebar if the word is a known explicit typo (e.g. teh -> the, freind -> friend)
+      // This prevents false auto-corrections like replacing valid words (e.g. help -> held)
+      const lower = word.toLowerCase();
+      const explicitFix = SpellChecker.COMMON_MISSPELLINGS[lower];
+      if (!explicitFix) return;
 
-      const rawCorrection = suggestions[0];
+      const rawCorrection = explicitFix;
 
       // Match original casing
       let correction = rawCorrection;
