@@ -175,6 +175,8 @@ const VoiceTyping = (() => {
     recognition.onstart = () => {
       isListening = true;
       updateVoiceBtn(true);
+      // Toast fires here — only after mic permission is actually granted
+      if (window.showToast) window.showToast('🎤 Voice typing started — speak now', 'info');
     };
 
     recognition.onend = () => {
@@ -200,6 +202,17 @@ const VoiceTyping = (() => {
     recognition.onerror = (event) => {
       isListening = false;
       updateVoiceBtn(false);
+      // Friendly error messages per error type
+      const errorMessages = {
+        'not-allowed':    '🔴 Microphone access denied. Please allow mic access in your browser settings.',
+        'no-speech':      '🔇 No speech detected. Try speaking louder or closer to the mic.',
+        'audio-capture':  '🎤 No microphone found. Please connect a mic and try again.',
+        'network':        '🌐 Network error during voice recognition. Check your connection.',
+        'aborted':        null, // silent — user cancelled
+      };
+      const msg = errorMessages[event.error];
+      if (msg && window.showToast) window.showToast(msg, 'error');
+      else if (msg === undefined && window.showToast) window.showToast(`Voice error: ${event.error}`, 'error');
       if (onError) onError(event.error);
     };
   }
@@ -213,8 +226,12 @@ const VoiceTyping = (() => {
     if (!recognition) return;
 
     recognition.lang = lang;
-    isListening = true;
-    try { recognition.start(); } catch {}
+    // Note: isListening is set to true inside recognition.onstart (after mic permission granted)
+    try { recognition.start(); } catch (e) {
+      if (e.name === 'InvalidStateError') {
+        // Already started — ignore
+      }
+    }
   }
 
   function stop() {

@@ -924,14 +924,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Check BEFORE toggling so we know which direction we're going
-      const wasListening = VoiceTyping.isListening();
-      VoiceTyping.toggle('en-US');
-
-      if (!wasListening) {
-        showToast('🎤 Voice typing started — speak now', 'info');
-      } else {
+      if (VoiceTyping.isListening()) {
+        VoiceTyping.stop();
         showToast('🎤 Voice typing stopped', 'info');
+      } else {
+        VoiceTyping.start('en-US');
+        // "started" toast fires from recognition.onstart after mic permission granted
       }
     });
   }
