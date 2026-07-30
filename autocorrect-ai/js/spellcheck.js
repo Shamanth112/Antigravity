@@ -160,7 +160,12 @@ const SpellChecker = (() => {
     'couldnt': "couldn't", 'doesnt': "doesn't", 'arent': "aren't", 'werent': "weren't",
     'shoudl': 'should', 'arond': 'around', 'donot': 'do not', 'realy': 'really',
     'definetly': 'definitely', 'becuase': 'because', 'acurate': 'accurate',
-    'acurately': 'accurately', 'texet': 'text', 'lookig': 'looking'
+    'acurately': 'accurately', 'texet': 'text', 'lookig': 'looking',
+    'helo': 'hello', 'speling': 'spelling', 'writting': 'writing', 'wurd': 'word',
+    'wurds': 'words', 'proccess': 'process', 'systeme': 'system', 'servise': 'service',
+    'imporant': 'important', 'somthing': 'something', 'nothingg': 'nothing',
+    'peopl': 'people', 'diffrent': 'different', 'helpfull': 'helpful', 'usefull': 'useful',
+    'thnak': 'thank', 'thnaks': 'thanks', 'welcom': 'welcome'
   };
 
   // Levenshtein distance for suggestions
