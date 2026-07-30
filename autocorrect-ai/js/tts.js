@@ -226,10 +226,34 @@ const VoiceTyping = (() => {
     if (!recognition) return;
 
     recognition.lang = lang;
-    // Note: isListening is set to true inside recognition.onstart (after mic permission granted)
-    try { recognition.start(); } catch (e) {
-      if (e.name === 'InvalidStateError') {
-        // Already started — ignore
+
+    // Explicitly request mic permission first — triggers the browser permission prompt
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then((stream) => {
+          // Permission granted — release the test stream and start recognition
+          stream.getTracks().forEach(track => track.stop());
+          try { recognition.start(); } catch (e) {
+            if (e.name !== 'InvalidStateError') throw e;
+          }
+        })
+        .catch((err) => {
+          // Permission denied or no mic
+          if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+            if (window.showToast) window.showToast('🔴 Microphone access denied. Click the 🔒 icon in your address bar and allow mic access, then try again.', 'error');
+          } else if (err.name === 'NotFoundError') {
+            if (window.showToast) window.showToast('🎤 No microphone found. Please connect a mic and try again.', 'error');
+          } else {
+            if (window.showToast) window.showToast(`Mic error: ${err.message}`, 'error');
+          }
+          updateVoiceBtn(false);
+        });
+    } else {
+      // Fallback for browsers without getUserMedia (just try directly)
+      try { recognition.start(); } catch (e) {
+        if (e.name !== 'InvalidStateError') {
+          if (window.showToast) window.showToast('Could not start voice typing.', 'error');
+        }
       }
     }
   }
