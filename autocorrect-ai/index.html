@@ -16,43 +16,7 @@
 </head>
 <body>
 
-  <!-- Preloader -->
-  <div id="preloader">
-    <div class="preloader-content">
-      <div class="preloader-logo-wrapper">
-        <div class="preloader-logo-glow"></div>
-        <div class="preloader-logo-ring"></div>
-        <div class="preloader-logo-icon">✍</div>
-      </div>
-      <div class="preloader-brand">AutoCorrect<span>AI</span></div>
-      <div class="preloader-bar-container">
-        <div class="preloader-bar-fill"></div>
-      </div>
-      <div class="preloader-status">Initializing AI Engines...</div>
-    </div>
-  </div>
-  <script>
-    (function() {
-      let hidden = false;
-      function hidePreloader() {
-        if (hidden) return;
-        hidden = true;
-        const p = document.getElementById('preloader');
-        if (p) {
-          p.classList.add('fade-out');
-          setTimeout(function() { if (p && p.parentNode) p.parentNode.removeChild(p); }, 500);
-        }
-      }
-      if (document.readyState === 'complete') {
-        setTimeout(hidePreloader, 300);
-      } else {
-        window.addEventListener('load', function() { setTimeout(hidePreloader, 300); });
-        document.addEventListener('DOMContentLoaded', function() { setTimeout(hidePreloader, 600); });
-      }
-      // Guaranteed safety fallback: hide preloader within 1 second no matter what
-      setTimeout(hidePreloader, 1000);
-    })();
-  </script>
+
 
 <!-- ============================================================
      Toast Container
