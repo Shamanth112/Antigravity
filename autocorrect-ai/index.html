@@ -32,15 +32,26 @@
     </div>
   </div>
   <script>
-    window.addEventListener('load', function() {
-      const p = document.getElementById('preloader');
-      if (p) {
-        setTimeout(function() {
+    (function() {
+      let hidden = false;
+      function hidePreloader() {
+        if (hidden) return;
+        hidden = true;
+        const p = document.getElementById('preloader');
+        if (p) {
           p.classList.add('fade-out');
-          setTimeout(function() { p.remove(); }, 500);
-        }, 400);
+          setTimeout(function() { if (p && p.parentNode) p.parentNode.removeChild(p); }, 500);
+        }
       }
-    });
+      if (document.readyState === 'complete') {
+        setTimeout(hidePreloader, 300);
+      } else {
+        window.addEventListener('load', function() { setTimeout(hidePreloader, 300); });
+        document.addEventListener('DOMContentLoaded', function() { setTimeout(hidePreloader, 600); });
+      }
+      // Guaranteed safety fallback: hide preloader within 1 second no matter what
+      setTimeout(hidePreloader, 1000);
+    })();
   </script>
 
 <!-- ============================================================
