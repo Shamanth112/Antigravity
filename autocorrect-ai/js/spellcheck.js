@@ -185,21 +185,79 @@ const SpellChecker = (() => {
   function getSuggestions(word, maxSuggestions = 5) {
     const w = word.toLowerCase();
 
-    // Direct misspelling lookup
+    // 1. Direct misspelling lookup
     if (COMMON_MISSPELLINGS[w]) return [COMMON_MISSPELLINGS[w]];
 
-    // Levenshtein-based suggestions
-    const candidates = [];
-    const maxDist = word.length <= 4 ? 1 : word.length <= 7 ? 2 : 3;
-
-    for (const dictWord of DICTIONARY) {
-      if (Math.abs(dictWord.length - w.length) > maxDist) continue;
-      const dist = levenshtein(w, dictWord);
-      if (dist <= maxDist) candidates.push({ word: dictWord, dist });
+    // 2. Fast check: deduplicate repeated consecutive letters (e.g. "writting" -> "writing", "playying" -> "playing", "helpfull" -> "helpful")
+    const dedup = w.replace(/(.)\1+/g, '$1');
+    if (dedup !== w && isCorrect(dedup)) {
+      return [dedup];
     }
 
-    candidates.sort((a, b) => a.dist - b.dist);
-    return candidates.slice(0, maxSuggestions).map(c => c.word);
+    // 3. Candidate search with prefix, suffix & distance scoring
+    const candidates = [];
+    const maxDist = w.length <= 4 ? 1 : w.length <= 8 ? 2 : 3;
+
+    function scoreCandidate(cand) {
+      if (cand === w) return;
+      const lenDiff = Math.abs(cand.length - w.length);
+      if (lenDiff > maxDist) return;
+
+      const dist = levenshtein(w, cand);
+      if (dist > maxDist) return;
+
+      // Base score: lower is better
+      let score = dist * 10 + lenDiff * 3;
+
+      // Bonus for matching starting prefix
+      if (w[0] === cand[0]) score -= 4;
+      if (w.length >= 2 && cand.length >= 2 && w[1] === cand[1]) score -= 3;
+      if (w.length >= 3 && cand.length >= 3 && w[2] === cand[2]) score -= 2;
+
+      // Bonus for matching ending suffix
+      if (w.length >= 4 && cand.length >= 4) {
+        if (w.slice(-3) === cand.slice(-3)) score -= 3;
+        else if (w.slice(-2) === cand.slice(-2)) score -= 2;
+      }
+
+      candidates.push({ word: cand, score });
+    }
+
+    // Search dictionary words
+    for (const dictWord of DICTIONARY) {
+      scoreCandidate(dictWord);
+    }
+
+    // Generate inflected candidates (+ing, +ed, +s, +es, +ly) for root dictionary words
+    if (w.length >= 4) {
+      const isIng = w.endsWith('ing');
+      const isEd = w.endsWith('ed');
+      const isS = w.endsWith('s');
+      const isLy = w.endsWith('ly');
+
+      for (const dictWord of DICTIONARY) {
+        if (dictWord.length < 3) continue;
+        if (isS) { scoreCandidate(dictWord + 's'); scoreCandidate(dictWord + 'es'); }
+        if (isEd) { scoreCandidate(dictWord + 'ed'); if (dictWord.endsWith('e')) scoreCandidate(dictWord.slice(0, -1) + 'ed'); }
+        if (isIng) { scoreCandidate(dictWord + 'ing'); if (dictWord.endsWith('e')) scoreCandidate(dictWord.slice(0, -1) + 'ing'); }
+        if (isLy) { scoreCandidate(dictWord + 'ly'); }
+      }
+    }
+
+    if (candidates.length === 0) return [];
+
+    // Deduplicate and filter valid candidates
+    const seen = new Set();
+    const unique = [];
+    for (const c of candidates) {
+      if (!seen.has(c.word) && isCorrect(c.word)) {
+        seen.add(c.word);
+        unique.push(c);
+      }
+    }
+
+    unique.sort((a, b) => a.score - b.score);
+    return unique.slice(0, maxSuggestions).map(c => c.word);
   }
 
   function checkWordInflections(w) {
