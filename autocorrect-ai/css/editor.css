@@ -387,14 +387,24 @@
   transform: rotate(20deg);
 }
 
-/* ============================================
-   Editor Workspace
-   ============================================ */
+/* View Panel Base — All panel views (Analytics, Settings, Documents, Templates, etc.) scroll smoothly */
+.view-panel {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: calc(100vh - var(--header-height));
+  padding-bottom: var(--space-12);
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-3) transparent;
+}
 
-.editor-workspace {
+/* Editor Workspace — fixed layout where sub-elements handle scrolling */
+.view-panel.editor-workspace {
   display: flex;
   flex: 1;
   overflow: hidden;
+  height: calc(100vh - var(--header-height));
+  padding-bottom: 0;
 }
 
 /* Editor Main */
