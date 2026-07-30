@@ -13,6 +13,33 @@
 </head>
 <body>
 
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preloader-content">
+      <div class="preloader-logo-wrapper">
+        <div class="preloader-logo-glow"></div>
+        <div class="preloader-logo-ring"></div>
+        <div class="preloader-logo-icon">✍</div>
+      </div>
+      <div class="preloader-brand">AutoCorrect<span>AI</span></div>
+      <div class="preloader-bar-container">
+        <div class="preloader-bar-fill"></div>
+      </div>
+      <div class="preloader-status">Loading Workspace...</div>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('load', function() {
+      const p = document.getElementById('preloader');
+      if (p) {
+        setTimeout(function() {
+          p.classList.add('fade-out');
+          setTimeout(function() { p.remove(); }, 500);
+        }, 400);
+      }
+    });
+  </script>
+
   <!-- Toast Container -->
   <div id="toast-container"></div>
 
