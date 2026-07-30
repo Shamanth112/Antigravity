@@ -19,6 +19,47 @@ const SpellChecker = (() => {
     'two','how','our','work','first','well','way','even','new','want','because','any','these',
     'give','day','most','us',
 
+    // Auxiliary & Irregular Verbs (Crucial for preventing false corrections)
+    'was','were','has','had','been','is','are','am','being',
+    'does','did','done','doing','having','going','goes','went','gone',
+    'makes','made','making','takes','took','taken','taking',
+    'sees','saw','seen','seeing','knows','knew','known','knowing',
+    'says','said','saying','gets','got','gotten','getting',
+    'wants','wanted','wanting','gives','gave','given','giving',
+    'finds','found','finding','thinks','thought','thinking',
+    'tells','told','telling','becomes','became','becoming',
+    'shows','showed','shown','showing','leaves','left','leaving',
+    'feels','felt','feeling','puts','putting','brings','brought','bringing',
+    'keeps','kept','keeping','holds','held','holding','writes','wrote','written','writing',
+    'stands','stood','standing','hears','heard','hearing','lets','letting',
+    'means','meant','meaning','sets','setting','meets','met','meeting',
+    'runs','ran','running','pays','paid','paying','sits','sat','sitting',
+    'speaks','spoke','spoken','speaking','reads','reading','allows','allowed','allowing',
+    'adds','added','adding','spends','spent','spending','grows','grew','grown','growing',
+    'opens','opened','opening','walks','walked','walking','wins','won','winning',
+    'offers','offered','offering','remembers','remembered','remembering',
+    'loves','loved','loving','considers','considered','considering',
+    'appears','appeared','appearing','buys','bought','buying',
+    'waits','waited','waiting','serves','served','serving',
+    'dies','died','dying','sends','sent','sending',
+    'expects','expected','expecting','builds','built','building',
+    'stays','stayed','staying','falls','fell','fallen','falling',
+    'cuts','cutting','reaches','reached','reaching',
+    'kills','killed','killing','remains','remained','remaining',
+    'suggests','suggested','suggesting','raises','raised','raising',
+    'passes','passed','passing','sells','sold','selling',
+    'requires','required','requiring','reports','reported','reporting',
+    'decides','decided','deciding','pulls','pulled','pulling',
+    'develops','developed','developing','eats','ate','eaten','eating',
+    'breaks','broke','broken','breaking','catches','caught','catching',
+    'throws','threw','thrown','throwing','pushes','pushed','pushing',
+    'sings','sang','sung','singing','chooses','chose','chosen','choosing',
+    'draws','drew','drawn','drawing','picks','picked','picking',
+    'drives','drove','driven','driving','wears','wore','worn','wearing',
+    'wishes','wished','wishing','drops','dropped','dropping',
+    'plans','planned','planning','misses','missed','missing',
+    'acts','acted','acting',
+
     // Common verbs
     'go','come','get','make','take','see','know','think','say','give','find','tell','ask',
     'work','seem','feel','try','leave','call','keep','let','begin','show','hear','play',
@@ -705,6 +746,7 @@ const SpellChecker = (() => {
     const w = word.toLowerCase().replace(/[^a-z']/g, '');
     if (!w || w.length <= 1) return true;
     if (/^\d+$/.test(w)) return true;
+    if (DICTIONARY.has(w) || CUSTOM_DICTIONARY.has(w)) return true;
     if (checkWordInflections(w)) return true;
     return false;
   }
@@ -745,6 +787,10 @@ const SpellChecker = (() => {
 
     // 1. Direct misspelling map (highest priority)
     if (COMMON_MISSPELLINGS[w]) return [COMMON_MISSPELLINGS[w]];
+
+    // Safety guard: For 1-3 letter words (like was, war, cat, car, bad, bed),
+    // NEVER perform fuzzy edit distance guessing to prevent false word swaps!
+    if (w.length <= 3) return [];
 
     // 2. Fast letter deduplication: "writting" -> "writing", "playying" -> "playing"
     const dedup = w.replace(/(.)\1{2,}/g, '$1$1').replace(/(.)\1+/g, '$1');
