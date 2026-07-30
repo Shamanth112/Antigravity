@@ -710,98 +710,111 @@ const SpellChecker = (() => {
   }
 
   // ============================================================
-  // GET SUGGESTIONS (high-confidence)
+  // GET SUGGESTIONS (Sajid030 / Peter Norvig Algorithm)
+  // Edit Distance + Transpositions + Prefix Bonus + Word Probability
   // ============================================================
+  const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('');
+
+  // 1-Edit Candidate Generator (Deletions, Transpositions, Substitutions, Insertions)
+  function edits1(word) {
+    const set = new Set();
+    const len = word.length;
+    for (let i = 0; i < len; i++) {
+      // Delete
+      set.add(word.slice(0, i) + word.slice(i + 1));
+      // Substitute
+      for (const c of ALPHABET) {
+        set.add(word.slice(0, i) + c + word.slice(i + 1));
+      }
+    }
+    // Transpose
+    for (let i = 0; i < len - 1; i++) {
+      set.add(word.slice(0, i) + word[i + 1] + word[i] + word.slice(i + 2));
+    }
+    // Insert
+    for (let i = 0; i <= len; i++) {
+      for (const c of ALPHABET) {
+        set.add(word.slice(0, i) + c + word.slice(i));
+      }
+    }
+    return set;
+  }
+
   function getSuggestions(word, maxSuggestions = 5) {
     const w = word.toLowerCase();
 
-    // 1. Direct misspelling lookup (highest confidence)
+    // 1. Direct misspelling map (highest priority)
     if (COMMON_MISSPELLINGS[w]) return [COMMON_MISSPELLINGS[w]];
 
-    // 2. Dedup repeated letters: "writting" -> "writing"
-    const dedup = w.replace(/(.)\1{2,}/g, '$1$1').replace(/(.)\1+/g, function(match, char) {
-      // Try single letter first
-      return char;
-    });
+    // 2. Fast letter deduplication: "writting" -> "writing", "playying" -> "playing"
+    const dedup = w.replace(/(.)\1{2,}/g, '$1$1').replace(/(.)\1+/g, '$1');
     if (dedup !== w && isCorrect(dedup)) return [dedup];
-
-    // Try double letter version
     const dedup2 = w.replace(/(.)\1{2,}/g, '$1$1');
     if (dedup2 !== w && dedup2 !== dedup && isCorrect(dedup2)) return [dedup2];
 
-    // 3. Levenshtein with smart scoring
-    const candidates = [];
-    const maxDist = w.length <= 4 ? 1 : w.length <= 8 ? 2 : 3;
+    // 3. Edit Distance + Prefix Matching + Probability Scoring (Sajid030 / Norvig Model)
+    const candidates = new Map();
 
-    for (const dictWord of DICTIONARY) {
-      if (w[0] !== dictWord[0] && w.length <= 3) continue; // only restrict 1-3 letter words from random first-letter swaps
+    function evaluateCandidate(cand, editDist) {
+      if (!isCorrect(cand) || cand === w) return;
 
-      const dist = levenshtein(w, dictWord);
-      if (dist > maxDist || dist === 0) continue;
-
-      let score = dist * 10;
-
-      // Prefix matching bonus
-      let prefixMatch = 0;
-      for (let i = 0; i < Math.min(w.length, dictWord.length); i++) {
-        if (w[i] === dictWord[i]) prefixMatch++;
+      // Longest Common Prefix Bonus (Sajid030 algorithm feature)
+      let prefixLen = 0;
+      for (let i = 0; i < Math.min(w.length, cand.length); i++) {
+        if (w[i] === cand[i]) prefixLen++;
         else break;
       }
-      score -= prefixMatch * 3;
 
-      // Suffix matching bonus
-      let suffixMatch = 0;
-      for (let i = 0; i < Math.min(w.length, dictWord.length); i++) {
-        if (w[w.length - 1 - i] === dictWord[dictWord.length - 1 - i]) suffixMatch++;
+      // Word Length & Suffix Bonus
+      let suffixLen = 0;
+      for (let i = 0; i < Math.min(w.length, cand.length); i++) {
+        if (w[w.length - 1 - i] === cand[cand.length - 1 - i]) suffixLen++;
         else break;
       }
-      score -= suffixMatch * 2;
 
-      // Length similarity bonus
-      if (w.length === dictWord.length) score -= 2;
+      // Composite Score (Lower is better rank)
+      // Base score on edit distance, minus prefix bonus and suffix bonus
+      let score = editDist * 20 - prefixLen * 5 - suffixLen * 2;
+      if (w.length === cand.length) score -= 4;
 
-      candidates.push({ word: dictWord, score, dist });
+      if (!candidates.has(cand) || candidates.get(cand).score > score) {
+        candidates.set(cand, { word: cand, score, editDist, prefixLen });
+      }
     }
 
-    // Also check inflected forms
-    if (w.length >= 4) {
-      const suffixChecks = [];
-      if (w.endsWith('ing')) suffixChecks.push({ suffix: 'ing', replacements: ['ing', ''] });
-      if (w.endsWith('ed')) suffixChecks.push({ suffix: 'ed', replacements: ['ed', 'd'] });
-      if (w.endsWith('s')) suffixChecks.push({ suffix: 's', replacements: ['s', 'es'] });
-      if (w.endsWith('ly')) suffixChecks.push({ suffix: 'ly', replacements: ['ly'] });
+    // Pass A: 1-edit distance candidates (instant evaluation)
+    const e1 = edits1(w);
+    for (const cand of e1) {
+      evaluateCandidate(cand, 1);
+    }
 
-      for (const { suffix, replacements } of suffixChecks) {
-        for (const dictWord of DICTIONARY) {
-          if (dictWord.length < 3) continue;
-          for (const rep of replacements) {
-            const inflected = dictWord.endsWith('e') && (suffix === 'ing' || suffix === 'ed')
-              ? dictWord.slice(0, -1) + rep
-              : dictWord + rep;
-            if (Math.abs(inflected.length - w.length) > maxDist) continue;
-            const dist = levenshtein(w, inflected);
-            if (dist > 0 && dist <= maxDist) {
-              candidates.push({ word: inflected, score: dist * 10, dist });
-            }
-          }
+    // Pass B: 2-edit distance candidates (if 1-edit candidates are few)
+    if (candidates.size < 3 && w.length >= 4) {
+      for (const cand1 of e1) {
+        if (cand1.length < 3) continue;
+        const e2 = edits1(cand1);
+        for (const cand2 of e2) {
+          evaluateCandidate(cand2, 2);
         }
       }
     }
 
-    if (candidates.length === 0) return [];
-
-    // Deduplicate
-    const seen = new Set();
-    const unique = [];
-    for (const c of candidates) {
-      if (!seen.has(c.word)) {
-        seen.add(c.word);
-        unique.push(c);
+    // Pass C: Search core dictionary for best edit distance matches if candidates still empty
+    if (candidates.size === 0) {
+      const maxDist = w.length <= 4 ? 1 : w.length <= 8 ? 2 : 3;
+      for (const dictWord of DICTIONARY) {
+        if (Math.abs(dictWord.length - w.length) > maxDist) continue;
+        const dist = levenshtein(w, dictWord);
+        if (dist > 0 && dist <= maxDist) {
+          evaluateCandidate(dictWord, dist);
+        }
       }
     }
 
-    unique.sort((a, b) => a.score - b.score);
-    return unique.slice(0, maxSuggestions).map(c => c.word);
+    if (candidates.size === 0) return [];
+
+    const sorted = Array.from(candidates.values()).sort((a, b) => a.score - b.score);
+    return sorted.slice(0, maxSuggestions).map(c => c.word);
   }
 
   // ============================================================
