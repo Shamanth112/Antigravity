@@ -1084,7 +1084,10 @@ document.addEventListener('DOMContentLoaded', () => {
       Storage.addToHistory({ action: 'Edit', docId: currentDoc?.id });
     });
 
-    function handleAutocorrect(e) {
+    // ============================================================
+    // Google AI AutoCorrect — Word-level (on Space)
+    // ============================================================
+    async function handleAutocorrect(e) {
       const selection = window.getSelection();
       if (!selection.rangeCount) return;
       const range = selection.getRangeAt(0);
@@ -1097,17 +1100,18 @@ document.addEventListener('DOMContentLoaded', () => {
       const offset = range.startOffset;
       const textBefore = text.slice(0, offset);
 
-      // Match word at the end, possibly followed by punctuation (but not space)
+      // Match last word typed
       const match = textBefore.match(/([a-zA-Z']+)[^a-zA-Z'\s]*$/);
       if (!match) return;
 
       const word = match[1];
+      if (word.length < 2) return;
 
-      // Pure Google AI AutoCorrect
+      // Ask Google AI to correct this word (with context)
       const correction = await window.GoogleAI.autoCorrectWord(word, textBefore);
-      if (!correction || correction === word) return;
+      if (!correction || correction.toLowerCase() === word.toLowerCase()) return;
 
-      // Match original casing
+      // Preserve original casing
       let finalCorrection = correction;
       if (word === word.toUpperCase()) {
         finalCorrection = correction.toUpperCase();
@@ -1115,56 +1119,100 @@ document.addEventListener('DOMContentLoaded', () => {
         finalCorrection = correction.charAt(0).toUpperCase() + correction.slice(1);
       }
 
-      // Calculate start and end offsets of the word in the text node
-      const wordStartOffset = offset - match[0].length;
-      const wordEndOffset = wordStartOffset + word.length;
-
-      // Create a range selecting the word
+      // Select the misspelled word in the text node
+      const wordStart = offset - match[0].length;
+      const wordEnd = wordStart + word.length;
       const wordRange = document.createRange();
-      wordRange.setStart(container, wordStartOffset);
-      wordRange.setEnd(container, wordEndOffset);
+      wordRange.setStart(container, wordStart);
+      wordRange.setEnd(container, wordEnd);
 
-      // Select the word
       selection.removeAllRanges();
       selection.addRange(wordRange);
 
-      // Replace the selection with the Google AI corrected word
+      // Replace with AI-corrected word
       document.execCommand('insertText', false, finalCorrection);
 
-      // Add to history and stats (silently)
-      Storage.addToHistory({ action: `Google AI Auto-corrected: "${word}" → "${finalCorrection}"`, docId: currentDoc?.id });
+      // Silent logging
+      Storage.addToHistory({ action: `AI: "${word}" → "${finalCorrection}"`, docId: currentDoc?.id });
       Storage.updateStats({ mistakesFixed: 1 });
-
-      // Schedule analysis update
       scheduleAnalysis(300);
       scheduleAutosave();
     }
 
-    // Keyboard shortcuts & AI AutoCorrect triggers
+    // ============================================================
+    // Google AI AutoCorrect — Sentence-level (on . ! ? Enter)
+    // ============================================================
+    let sentenceFixTimer = null;
+    async function handleSentenceCorrection() {
+      if (!window.GoogleAI) return;
+      const editorEl = getEditor();
+      if (!editorEl) return;
+
+      const rawText = getPlainText();
+      if (!rawText || rawText.trim().length < 8) return;
+
+      // Save cursor position
+      const sel = window.getSelection();
+      let savedOffset = 0;
+      if (sel.rangeCount) {
+        const r = sel.getRangeAt(0);
+        // Calculate character offset from start of editor
+        const preRange = document.createRange();
+        preRange.selectNodeContents(editorEl);
+        preRange.setEnd(r.startContainer, r.startOffset);
+        savedOffset = preRange.toString().length;
+      }
+
+      const fixed = await window.GoogleAI.correctSentence(rawText);
+      if (!fixed || fixed === rawText) return;
+      // Safety: don't replace if AI changed too much (hallucination guard)
+      if (Math.abs(fixed.length - rawText.length) > 50) return;
+
+      // Replace text content while preserving cursor
+      editorEl.innerText = fixed;
+
+      // Restore cursor position
+      try {
+        const walker = document.createTreeWalker(editorEl, NodeFilter.SHOW_TEXT);
+        let charCount = 0;
+        let node;
+        while ((node = walker.nextNode())) {
+          const nodeLen = node.textContent.length;
+          if (charCount + nodeLen >= savedOffset) {
+            const newRange = document.createRange();
+            newRange.setStart(node, Math.min(savedOffset - charCount, nodeLen));
+            newRange.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(newRange);
+            break;
+          }
+          charCount += nodeLen;
+        }
+      } catch (_) { /* cursor restore best-effort */ }
+
+      scheduleAnalysis(300);
+      saveCurrentDocument();
+    }
+
+    // ============================================================
+    // Keyboard shortcuts & AI triggers
+    // ============================================================
     editor.addEventListener('keydown', (e) => {
+      // Word-level AI autocorrect on Space
       if (e.key === ' ' || e.key === 'Spacebar') {
-        const currentSettings = Storage.getSettings();
-        if (currentSettings.autoCorrect && currentSettings.spellCheck) {
+        const s = Storage.getSettings();
+        if (s.autoCorrect && s.spellCheck) {
           handleAutocorrect(e);
         }
       }
 
-      // Sentence-level Google AI AutoCorrect on sentence completion
+      // Sentence-level AI autocorrect on sentence punctuation (debounced)
       if (['.', '!', '?', 'Enter'].includes(e.key)) {
-        setTimeout(async () => {
-          const currentSettings = Storage.getSettings();
-          if (currentSettings.autoCorrect && window.GoogleAI) {
-            const rawText = getPlainText();
-            if (rawText && rawText.length > 5) {
-              const fixed = await window.GoogleAI.correctSentence(rawText);
-              if (fixed && fixed !== rawText && Math.abs(fixed.length - rawText.length) < 30) {
-                getEditor().innerText = fixed;
-                scheduleAnalysis(300);
-                saveCurrentDocument();
-              }
-            }
-          }
-        }, 150);
+        const s = Storage.getSettings();
+        if (s.autoCorrect) {
+          clearTimeout(sentenceFixTimer);
+          sentenceFixTimer = setTimeout(() => handleSentenceCorrection(), 300);
+        }
       }
 
       if (e.ctrlKey || e.metaKey) {
