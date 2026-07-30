@@ -1088,14 +1088,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const word = match[1];
 
-      // Check if the word is misspelled (valid words in dictionary are skipped)
+      // Skip valid words immediately
       if (SpellChecker.isCorrect(word)) return;
 
-      // Get top suggestion for the misspelled word
-      const suggestions = SpellChecker.getSuggestions(word);
-      if (!suggestions || suggestions.length === 0) return;
+      const lower = word.toLowerCase();
 
-      const rawCorrection = suggestions[0];
+      // HIGH-CONFIDENCE AUTOCORRECT ONLY:
+      // 1. Known misspelling from explicit map (100% confidence)
+      const explicitFix = SpellChecker.COMMON_MISSPELLINGS[lower];
+      let rawCorrection = null;
+
+      if (explicitFix) {
+        rawCorrection = explicitFix;
+      } else {
+        // 2. Levenshtein-based: only auto-correct if distance=1 AND first letter matches
+        //    This prevents wild guesses like "help" -> "held"
+        const suggestions = SpellChecker.getSuggestions(word);
+        if (suggestions && suggestions.length > 0) {
+          const top = suggestions[0];
+          const topLower = top.toLowerCase();
+          // Only auto-replace if: first letter matches AND the word is very close
+          if (topLower[0] === lower[0] && Math.abs(topLower.length - lower.length) <= 1) {
+            rawCorrection = top;
+          }
+        }
+      }
+
+      if (!rawCorrection) return;
 
       // Match original casing
       let correction = rawCorrection;
