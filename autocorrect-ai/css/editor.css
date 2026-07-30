@@ -9,7 +9,7 @@
 .app-shell {
   display: flex;
   height: 100vh;
-  overflow: hidden;
+  overflow: hidden; /* sidebar stays fixed; main-content scrolls internally */
   background: var(--surface-bg);
 }
 
