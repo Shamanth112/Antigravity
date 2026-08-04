@@ -154,6 +154,9 @@ const SpellChecker = (() => {
     'chinese','japanese','french','german','spanish','italian','russian','canadian',
     'australian','london','paris','tokyo','york',
 
+    // Custom proper nouns — never auto-correct these
+    'shamanth',
+
     // Technology & modern vocabulary
     'computer','software','hardware','internet','website','online','offline','digital',
     'technology','data','database','server','client','network','browser','email','password',
